@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="icon">icon</string>
+    <string name="app_name">Deduplicate SMS</string>
+    <string name="cancelling">Cancelling…</string>
+    <string name="more_apps">More Apps</string>
+    <string name="deduplicate">Deduplicate</string>
+    <string name="reading_msg">Reading Messages.</string>
+    <string name="tap_here">Tap here to cancel.</string>
+    <string name="deleting_duplicates">Deleting duplicate messages…</string>
+    <string name="deleted_messages" formatted="false">Deleted %1$s/%2$s duplicates</string>
+    <string name="delete_duplicates" formatted="false">Delete %1$s duplicates?</string>
+    <string name="warning_message">This app is not responsible if any data is lost, kindly take a backup before proceeding.</string>
+    <string name="revert">Revert to previous SMS app.</string>
+    <string name="security_reasons"><![CDATA[For security reasons only ONE app can read & write SMS for mobile running on Android-KitKat and above.\nAfter deleting the duplicates revert back to default/previous SMS app. Find more at http://android-developers.blogspot.com/2013/10/getting-your-sms-apps-ready-for-kitkat.html]]></string>
+    <string name="required_permissions">Required Permission</string>
+    <string name="permission_explain"><![CDATA[%s requires access to \"READ_SMS & WRITE_SMS\" to delete duplicate messages.]]></string>
+    <string name="failed">Failed</string>
+    <string name="failure_message">Default SMS app not changed. Cannot read/write SMS</string>
+    <string name="m_permission_inform"><![CDATA[App uses read/write sms permission to find & delete duplicates. No personal data is read.]]></string>
+    <string name="no_duplicates">No duplicates found</string>
+    <string name="permissions_revoked">Permissions Revoked</string>
+    <string name="app_cannot_run">Without READ_SMS permission, app cannot run.\n</string>
+    <string name="app_will_exit">" App will exit on press of "</string>
+</resources>
