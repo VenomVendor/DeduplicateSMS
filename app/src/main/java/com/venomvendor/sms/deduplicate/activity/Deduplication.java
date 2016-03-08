@@ -45,6 +45,7 @@ import android.widget.Toast;
 
 import com.venomvendor.sms.deduplicate.R;
 import com.venomvendor.sms.deduplicate.data.FindDuplicates;
+import com.venomvendor.sms.deduplicate.data.FindDuplicates.OnDuplicatesFoundListener;
 import com.venomvendor.sms.deduplicate.service.DeleteSmsService;
 import com.venomvendor.sms.deduplicate.util.Constants;
 import com.venomvendor.sms.deduplicate.util.Utils;
@@ -113,7 +114,7 @@ public class Deduplication extends Activity implements View.OnClickListener {
     }
 
     private void showEula() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(Deduplication.this)
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setTitle(getString(R.string.app_name))
                 .setMessage(getString(R.string.eula))
                 .setCancelable(false)
@@ -256,7 +257,7 @@ public class Deduplication extends Activity implements View.OnClickListener {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        Deduplication.this.finish();
+                        finish();
                     }
                 }, null
         );
@@ -301,7 +302,7 @@ public class Deduplication extends Activity implements View.OnClickListener {
 
     private void cancelDeletion() {
         if (mService == null) {
-            mService = new Intent(Deduplication.this, DeleteSmsService.class);
+            mService = new Intent(this, DeleteSmsService.class);
         }
         stopService(mService);
     }
@@ -342,20 +343,25 @@ public class Deduplication extends Activity implements View.OnClickListener {
     }
 
     private void findDuplicates() {
-        FindDuplicates findDuplicates = new FindDuplicates(Deduplication.this);
-        findDuplicates.setOnDeleteDuplicatesListener(new FindDuplicates.OnDeleteDuplicatesListener() {
+        FindDuplicates findDuplicates = new FindDuplicates(this);
+        findDuplicates.setOnDuplicatesFoundListener(new OnDuplicatesFoundListener() {
             @Override
-            public void deleteDuplicates(ArrayList<String> duplicateIds) {
-                mDeDuplicate.setVisibility(View.GONE);
-                mProgressBarHolder.setVisibility(View.VISIBLE);
-                startDeleteService(duplicateIds);
+            public void duplicatesFound(ArrayList<String> duplicateIds) {
+                if (duplicateIds.isEmpty()) {
+                    Toast.makeText(getApplicationContext(), R.string.no_duplicates, Toast.LENGTH_SHORT).show();
+                    Utils.revertOldApp(getApplicationContext());
+                } else {
+                    mDeDuplicate.setVisibility(View.GONE);
+                    mProgressBarHolder.setVisibility(View.VISIBLE);
+                    startDeleteService(duplicateIds);
+                }
             }
         });
         findDuplicates.execute();
     }
 
     private void startDeleteService(ArrayList<String> duplicateIds) {
-        mService = new Intent(Deduplication.this, DeleteSmsService.class);
+        mService = new Intent(this, DeleteSmsService.class);
         mService.putStringArrayListExtra(Constants.DUPLICATE_IDS, duplicateIds);
         startService(mService);
     }
