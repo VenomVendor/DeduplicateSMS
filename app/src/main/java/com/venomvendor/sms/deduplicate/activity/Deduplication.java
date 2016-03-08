@@ -125,6 +125,7 @@ public class Deduplication extends Activity implements View.OnClickListener {
                                 editor.putBoolean(Constants.SHOW_EULA, false);
                                 editor.commit();
                                 dialog.dismiss();
+                                initViews();
                             }
                         })
                 .setNegativeButton(android.R.string.cancel,
