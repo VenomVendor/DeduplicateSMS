@@ -8,8 +8,6 @@
     <string name="reading_msg">Reading Messages.</string>
     <string name="tap_here">Tap here to cancel.</string>
     <string name="deleting_duplicates">Deleting duplicate messages…</string>
-    <string name="deleted_messages" formatted="false">Deleted %1$s/%2$s duplicates</string>
-    <string name="delete_duplicates" formatted="false">Delete %1$s duplicates?</string>
     <string name="warning_message">This app is not responsible if any data is lost, kindly take a backup before proceeding.</string>
     <string name="revert">Revert to previous SMS app.</string>
     <string name="security_reasons"><![CDATA[For security reasons only ONE app can read & write SMS for mobile running on Android-KitKat and above.\nAfter deleting the duplicates revert back to default/previous SMS app. Find more at http://android-developers.blogspot.com/2013/10/getting-your-sms-apps-ready-for-kitkat.html]]></string>
@@ -22,4 +20,19 @@
     <string name="permissions_revoked">Permissions Revoked</string>
     <string name="app_cannot_run">Without READ_SMS permission, app cannot run.\n</string>
     <string name="app_will_exit">" App will exit on press of "</string>
+    <string name="ignore_timestamp">Ignore timestamp?</string>
+    <string name="warning">Warning!</string>
+    <string name="warning_desc">This will delete similar messages from the SAME sender irrespective of any date.</string>
+    <string name="keep_first">Keep first message.</string>
+    <string name="keep_last">Keep last message.</string>
+
+    <!-- Plurals -->
+    <plurals name="deleted_messages" formatted="true">
+        <item quantity="one">Deleted %1$d/%2$d duplicate</item>
+        <item quantity="other">Deleted %1$d/%2$d duplicates</item>
+    </plurals>
+    <plurals name="delete_duplicates">
+        <item quantity="one">Delete %d duplicate?</item>
+        <item quantity="other">Delete %d duplicates?</item>
+    </plurals>
 </resources>

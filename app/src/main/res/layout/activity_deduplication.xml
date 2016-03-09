@@ -1,115 +1,185 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="@dimen/activity_vertical_margin"
+    android:fillViewport="true"
     tools:context=".activity.Deduplication"
     tools:ignore="UnusedAttribute">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/deduplicate"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/button_height"
-            android:layout_weight="2"
-            android:paddingLeft="@dimen/min_padding"
-            android:paddingRight="@dimen/min_padding"
-            android:text="@string/deduplicate"
-            android:textAllCaps="false"/>
-
-        <Button
-            android:id="@+id/more_apps"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/button_height"
-            android:layout_weight="1"
-            android:paddingLeft="@dimen/min_padding"
-            android:paddingRight="@dimen/min_padding"
-            android:text="@string/more_apps"
-            android:textAllCaps="false"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/progress_bar_holder"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="@dimen/min_padding"
-        android:visibility="gone">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_margin="@dimen/min_padding"
-            android:adjustViewBounds="true"
-            android:contentDescription="@string/icon"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_launcher"/>
+        android:orientation="vertical"
+        android:padding="@dimen/activity_margin">
 
         <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/current_progress"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/tiny_margin"
-                android:text="@string/deleted_messages"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@android:color/black"/>
-
-            <ProgressBar
-                android:id="@+id/progress_bar"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/tiny_margin"/>
-
-            <Button
-                android:id="@+id/cancel"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/button_height"
-                android:layout_marginTop="@dimen/tiny_margin"
-                android:paddingLeft="@dimen/min_padding"
-                android:paddingRight="@dimen/min_padding"
-                android:text="@android:string/cancel"
-                android:textColor="@android:color/black"/>
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/min_padding">
-
-        <TextView
-            android:id="@+id/revert_message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:autoLink="web"
-            android:linksClickable="true"
-            android:padding="@dimen/min_padding"
-            android:text="@string/security_reasons"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@android:color/secondary_text_light"/>
+            android:layout_gravity="center"
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/revert"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/button_height"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:text="@string/revert"
-            android:textAllCaps="false"
-            android:textColor="@android:color/black"/>
-    </RelativeLayout>
-</LinearLayout>
+            <Button
+                android:id="@+id/deduplicate"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/button_height"
+                android:layout_weight="2"
+                android:paddingLeft="@dimen/min_padding"
+                android:paddingRight="@dimen/min_padding"
+                android:text="@string/deduplicate"
+                android:textAllCaps="false" />
+
+            <Button
+                android:id="@+id/more_apps"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/button_height"
+                android:layout_weight="1"
+                android:paddingLeft="@dimen/min_padding"
+                android:paddingRight="@dimen/min_padding"
+                android:text="@string/more_apps"
+                android:textAllCaps="false" />
+        </LinearLayout>
+
+        <CheckedTextView
+            android:id="@+id/ignore_timestamp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/tiny_margin"
+            android:checkMark="@null"
+            android:drawableEnd="@null"
+            android:drawableLeft="?android:attr/listChoiceIndicatorMultiple"
+            android:drawableRight="@null"
+            android:drawableStart="?android:attr/listChoiceIndicatorMultiple"
+            android:gravity="center_vertical"
+            android:text="@string/ignore_timestamp"
+            android:textColor="@android:color/black" />
+
+        <LinearLayout
+            android:id="@+id/ignore_timestamp_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/tiny_margin"
+                android:background="@android:color/black"
+                android:drawableLeft="@android:drawable/stat_sys_warning"
+                android:drawableStart="@android:drawable/stat_sys_warning"
+                android:padding="@dimen/tiny_margin"
+                android:text="@string/warning"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@android:color/white" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/tiny_margin"
+                android:text="@string/warning_desc"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#F00" />
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/tiny_margin"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/keep_first"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="@string/keep_first" />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/min_padding"
+                    android:layout_marginStart="@dimen/min_padding"
+                    android:text="@string/keep_last" />
+            </RadioGroup>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/progress_bar_holder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/min_padding"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/min_padding"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/icon"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_launcher" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/current_progress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/tiny_margin"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@android:color/black" />
+
+                <ProgressBar
+                    android:id="@+id/progress_bar"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/tiny_margin" />
+
+                <Button
+                    android:id="@+id/cancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/button_height"
+                    android:layout_marginTop="@dimen/tiny_margin"
+                    android:paddingLeft="@dimen/min_padding"
+                    android:paddingRight="@dimen/min_padding"
+                    android:text="@android:string/cancel"
+                    android:textColor="@android:color/black" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/min_padding">
+
+            <TextView
+                android:id="@+id/revert_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/revert"
+                android:layout_alignParentTop="true"
+                android:autoLink="web"
+                android:linksClickable="true"
+                android:padding="@dimen/min_padding"
+                android:text="@string/security_reasons"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@android:color/secondary_text_light" />
+
+            <Button
+                android:id="@+id/revert"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/button_height"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:text="@string/revert"
+                android:textAllCaps="false"
+                android:textColor="@android:color/black" />
+        </RelativeLayout>
+    </LinearLayout>
+</ScrollView>
