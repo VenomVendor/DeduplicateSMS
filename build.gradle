@@ -25,12 +25,14 @@ task clean(type: Delete) {
 ext {
     DEBUG = true
     MAJOR = 1
-    MINOR = 0
-    PATCH = 1
+    MINOR = 1
+    PATCH = 0
     RELEASE_SUFFIX = '' //"alpha/beta/debug" TODO-Always check during release.
-    DEBUG_SUFFIX =  "${RELEASE_SUFFIX}-debug"
+    DEBUG_SUFFIX = "${RELEASE_SUFFIX}-debug"
     versionName = "${MAJOR}.${MINOR}.${PATCH}" //For Users.
     versionCode = computeVersionName() //For PlayStore.
+    donut = versionCode
+    froyo = versionCode + 1
     KEY_LOCATION = '../key.keystore'
     abortOnError = false
     checkReleaseBuilds = true

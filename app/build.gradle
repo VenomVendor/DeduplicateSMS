@@ -12,6 +12,19 @@ android {
         versionName rootProject.ext.versionName
     }
 
+    productFlavors {
+        froyo {
+            minSdkVersion 8
+            versionCode rootProject.ext.froyo
+        }
+        donut {
+            minSdkVersion 4
+            maxSdkVersion 7
+            targetSdkVersion 7
+            versionCode rootProject.ext.donut
+        }
+    }
+
     signingConfigs {
         release {
             try {
