@@ -83,6 +83,7 @@ public class DeleteSmsService extends Service {
         mDelDuplicates = new Thread(new Runnable() {
             @Override
             public void run() {
+                String format = getResources().getQuantityString(R.plurals.deleted_messages, size);
                 ContentResolver contentResolver = getContentResolver();
                 int k = 0;
                 for (int i = 0; i < size; i++) {
@@ -91,8 +92,7 @@ public class DeleteSmsService extends Service {
 
                         if (builder != null) {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-                                builder.setContentTitle(String.format(getString(R.string.deleted_messages),
-                                        i + 1, size));
+                                builder.setContentTitle(String.format(format, i + 1, size));
                                 builder.setProgress(size, i + 1, false);
                             }
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {

@@ -22,7 +22,6 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.AsyncTask;
-import android.widget.Toast;
 
 import com.venomvendor.sms.deduplicate.R;
 import com.venomvendor.sms.deduplicate.util.Constants;
@@ -38,16 +37,23 @@ public class FindDuplicates extends AsyncTask<Void, Void, Boolean> {
     private final ArrayList<String> mDuplicateIds = new ArrayList<String>();
     private final List<Integer> mHashCodeCache = new ArrayList<Integer>();
     private final Activity mContext;
+    private final boolean mChecked;
+    private final boolean mKeepFirst;
     private ProgressDialog mProgressDialog;
     private Cursor mCursor;
     private int mIndex;
-    private OnDeleteDuplicatesListener mListener;
+    private OnDuplicatesFoundListener mListener;
 
-    public FindDuplicates(Activity activity) {
+    public FindDuplicates(Activity activity, boolean checked, boolean keepFirst) {
         this.mContext = activity;
+        this.mChecked = checked;
+        this.mKeepFirst = keepFirst;
     }
 
-    public void setOnDeleteDuplicatesListener(OnDeleteDuplicatesListener listener) {
+    public void setOnDuplicatesFoundListener(OnDuplicatesFoundListener listener) {
+        if (listener == null) {
+            throw new NullPointerException("Listener cannot be null.");
+        }
         this.mListener = listener;
     }
 
@@ -63,7 +69,8 @@ public class FindDuplicates extends AsyncTask<Void, Void, Boolean> {
 
     @Override
     protected Boolean doInBackground(Void... params) {
-        mCursor = mContext.getContentResolver().query(Constants.CONTENT_URI, null, null, null, null);
+        String sortOrder = mChecked ? Constants.DATE + (mKeepFirst ? " ASC" : " DESC") : null;
+        mCursor = mContext.getContentResolver().query(Constants.CONTENT_URI, null, null, null, sortOrder);
         if (mCursor != null) {
             mProgressDialog.setMax(mCursor.getCount());
             try {
@@ -87,9 +94,12 @@ public class FindDuplicates extends AsyncTask<Void, Void, Boolean> {
     private void collectDuplicates() {
         final String _id = Integer.toString(mCursor.getInt(0));
         final List<String> uniqueData = new ArrayList<String>();
+
         uniqueData.add(mCursor.getString(mCursor.getColumnIndex(Constants.ADDRESS)));
-        uniqueData.add(mCursor.getString(mCursor.getColumnIndex(Constants.DATE)));
         uniqueData.add(mCursor.getString(mCursor.getColumnIndex(Constants.BODY)));
+        if (!mChecked) {
+            uniqueData.add(mCursor.getString(mCursor.getColumnIndex(Constants.DATE)));
+        }
         int hashCode = uniqueData.hashCode();
 
         if (mHashCodeCache.contains(hashCode)) {
@@ -115,41 +125,41 @@ public class FindDuplicates extends AsyncTask<Void, Void, Boolean> {
     }
 
     private void showConfirmation() {
-
         if (mDuplicateIds.isEmpty()) {
-            Toast.makeText(mContext, R.string.no_duplicates, Toast.LENGTH_SHORT).show();
-            return;
+            deleteDuplicates();
+        } else {
+            AlertDialog.Builder confirmationDialog = new AlertDialog.Builder(mContext);
+            confirmationDialog.setCancelable(false);
+            confirmationDialog.setMessage(mContext.getResources()
+                    .getQuantityString(R.plurals.delete_duplicates, mDuplicateIds.size(), mDuplicateIds.size()));
+
+            confirmationDialog.setPositiveButton(mContext.getString(android.R.string.ok), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    deleteDuplicates();
+                }
+            });
+            confirmationDialog.setNegativeButton(mContext.getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            confirmationDialog.show();
         }
-
-        AlertDialog.Builder confirmationDialog = new AlertDialog.Builder(mContext);
-        confirmationDialog.setCancelable(false);
-        confirmationDialog.setMessage(String.format(mContext.getString(R.string.delete_duplicates), mDuplicateIds.size()));
-
-        confirmationDialog.setPositiveButton(mContext.getString(android.R.string.ok), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                deleteDuplicates();
-            }
-        });
-        confirmationDialog.setNegativeButton(mContext.getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        confirmationDialog.show();
     }
 
     private void deleteDuplicates() {
-        if (mListener != null) {
-            mListener.deleteDuplicates(mDuplicateIds);
+        if (mListener == null) {
+            throw new NullPointerException("OnDuplicatesFoundListener not implemented.");
         }
+        mListener.duplicatesFound(mDuplicateIds);
         mDuplicateIds.clear();
     }
 
-    public interface OnDeleteDuplicatesListener {
-        void deleteDuplicates(ArrayList<String> duplicateIds);
+    public interface OnDuplicatesFoundListener {
+        void duplicatesFound(ArrayList<String> duplicateIds);
     }
 
 }
