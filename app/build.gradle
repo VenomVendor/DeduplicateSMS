@@ -85,4 +85,8 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_6
         targetCompatibility JavaVersion.VERSION_1_6
     }
+
+    dependencies {
+        compile 'com.android.support:support-annotations:24.0.0'
+    }
 }

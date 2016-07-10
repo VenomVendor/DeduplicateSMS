@@ -24,10 +24,12 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.os.Build;
 import android.os.IBinder;
+import android.text.TextUtils;
 
 import com.venomvendor.sms.deduplicate.R;
 import com.venomvendor.sms.deduplicate.activity.Deduplication;
 import com.venomvendor.sms.deduplicate.util.Constants;
+import com.venomvendor.sms.deduplicate.util.DiskLogger;
 import com.venomvendor.sms.deduplicate.util.Utils;
 
 import java.util.ArrayList;
@@ -46,18 +48,20 @@ public class DeleteSmsService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
+        DiskLogger.log("DeleteSmsService", "onBind");
         return null;
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        DiskLogger.log("DeleteSmsService", "onStartCommand");
         mDuplicateIds = intent.getStringArrayListExtra(Constants.DUPLICATE_IDS);
         deleteDuplicates();
         return START_STICKY;
     }
 
     private void deleteDuplicates() {
-
+        DiskLogger.log("DeleteSmsService", "deleteDuplicates");
         final NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         Intent intent = new Intent(this, Deduplication.class);
         intent.putExtra(Constants.FROM_SERVICE, true);
@@ -78,8 +82,9 @@ public class DeleteSmsService extends Service {
         }
 
         Collections.sort(mDuplicateIds);
+        DiskLogger.log("DeleteSmsService", "mDuplicateIds.size(): " + mDuplicateIds.size());
+        DiskLogger.log("DeleteSmsService", TextUtils.join(", ", mDuplicateIds));
         final int size = mDuplicateIds.size();
-
         mDelDuplicates = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -87,8 +92,11 @@ public class DeleteSmsService extends Service {
                 ContentResolver contentResolver = getContentResolver();
                 int k = 0;
                 for (int i = 0; i < size; i++) {
+                    DiskLogger.log("new Thread(new Runnable()", "mDuplicateIds.get(" + i + ") " + mDuplicateIds.get(i));
                     if (!mDelDuplicates.isInterrupted()) {
+                        DiskLogger.log("!mDelDuplicates.isInterrupted()");
                         k += contentResolver.delete(Constants.CONTENT_URI, "_id=?", new String[]{mDuplicateIds.get(i)});
+                        DiskLogger.log("contentResolver.delete(");
 
                         if (builder != null) {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
@@ -118,7 +126,6 @@ public class DeleteSmsService extends Service {
                 Utils.revertOldApp(getApplicationContext());
 
                 stopSelf();
-
             }
         });
 
@@ -134,11 +141,12 @@ public class DeleteSmsService extends Service {
         }
 
         mDelDuplicates.start();
-
+        DiskLogger.log("DeleteSmsService", "mDelDuplicates.start()");
     }
 
     @Override
     public void onDestroy() {
+        DiskLogger.log("DeleteSmsService", "mDelDuplicates.interrupt()");
         mDelDuplicates.interrupt();
         super.onDestroy();
     }

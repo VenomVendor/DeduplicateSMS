@@ -35,6 +35,7 @@ import android.preference.PreferenceManager;
 import android.provider.Telephony;
 import android.provider.Telephony.Sms;
 import android.text.Html;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -50,6 +51,7 @@ import com.venomvendor.sms.deduplicate.data.FindDuplicates;
 import com.venomvendor.sms.deduplicate.data.FindDuplicates.OnDuplicatesFoundListener;
 import com.venomvendor.sms.deduplicate.service.DeleteSmsService;
 import com.venomvendor.sms.deduplicate.util.Constants;
+import com.venomvendor.sms.deduplicate.util.DiskLogger;
 import com.venomvendor.sms.deduplicate.util.Utils;
 
 import java.util.ArrayList;
@@ -75,12 +77,6 @@ public class Deduplication extends Activity implements View.OnClickListener {
     private Button mCancel;
     private Button mRevert;
     private TextView mDeleted;
-    private TextView mRevertMessage;
-    private CheckedTextView mIgnoreTimestamp;
-    private LinearLayout mIgnoreMessage;
-    private RadioButton mKeepFirst;
-    private SharedPreferences mPref;
-
     private final BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -107,6 +103,11 @@ public class Deduplication extends Activity implements View.OnClickListener {
             mProgressBar.setProgress(deletedMessages);
         }
     };
+    private TextView mRevertMessage;
+    private CheckedTextView mIgnoreTimestamp;
+    private LinearLayout mIgnoreMessage;
+    private RadioButton mKeepFirst;
+    private SharedPreferences mPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -348,17 +349,25 @@ public class Deduplication extends Activity implements View.OnClickListener {
     }
 
     private void findDuplicates() {
+        DiskLogger.log("Deduplication", "findDuplicates()");
         FindDuplicates findDuplicates = new FindDuplicates(this, mIgnoreTimestamp.isChecked(), mKeepFirst.isChecked());
         findDuplicates.setOnDuplicatesFoundListener(new OnDuplicatesFoundListener() {
             @Override
             public void duplicatesFound(ArrayList<String> duplicateIds) {
+                ArrayList<String> allDuplicateIds = new ArrayList<String>(duplicateIds);
+
+                DiskLogger.log("Deduplication", "duplicatesFound()", TextUtils.join(", ", allDuplicateIds));
+
                 if (duplicateIds.isEmpty()) {
                     Toast.makeText(getApplicationContext(), R.string.no_duplicates, Toast.LENGTH_SHORT).show();
                     Utils.revertOldApp(getApplicationContext());
                 } else {
                     mDeDuplicate.setVisibility(View.GONE);
                     mProgressBarHolder.setVisibility(View.VISIBLE);
-                    startDeleteService(duplicateIds);
+                    DiskLogger.log("Deduplication", "duplicatesFound: startDeleteService");
+                    Toast.makeText(Deduplication.this, "Log Generated Successfully", Toast.LENGTH_SHORT).show();
+                    finish();
+                    // startDeleteService(duplicateIds);
                 }
             }
         });
@@ -369,6 +378,7 @@ public class Deduplication extends Activity implements View.OnClickListener {
         mService = new Intent(this, DeleteSmsService.class);
         mService.putStringArrayListExtra(Constants.DUPLICATE_IDS, duplicateIds);
         startService(mService);
+        DiskLogger.log("Deduplication", "startDeleteService");
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -397,7 +407,6 @@ public class Deduplication extends Activity implements View.OnClickListener {
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
-
     }
 
     @Override
