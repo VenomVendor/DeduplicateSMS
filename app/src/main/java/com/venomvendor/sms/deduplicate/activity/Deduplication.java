@@ -36,6 +36,7 @@ import android.provider.Telephony;
 import android.provider.Telephony.Sms;
 import android.text.Html;
 import android.text.TextUtils;
+import android.util.SparseArray;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -70,6 +71,8 @@ public class Deduplication extends Activity implements View.OnClickListener {
     private final String[] mRequiredPermissions = {permission.READ_SMS};
 
     private Intent mService;
+
+    private boolean isDone = false;
 
     private LinearLayout mProgressBarHolder;
     private ProgressBar mProgressBar;
@@ -349,29 +352,60 @@ public class Deduplication extends Activity implements View.OnClickListener {
     }
 
     private void findDuplicates() {
+        isDone = false;
         DiskLogger.log("Deduplication", "findDuplicates()");
         FindDuplicates findDuplicates = new FindDuplicates(this, mIgnoreTimestamp.isChecked(), mKeepFirst.isChecked());
         findDuplicates.setOnDuplicatesFoundListener(new OnDuplicatesFoundListener() {
             @Override
             public void duplicatesFound(ArrayList<String> duplicateIds) {
-                ArrayList<String> allDuplicateIds = new ArrayList<String>(duplicateIds);
+                ArrayList<String> allClonedDuplicateIds = new ArrayList<String>(duplicateIds);
 
-                DiskLogger.log("Deduplication", "duplicatesFound()", TextUtils.join(", ", allDuplicateIds));
+                DiskLogger.log("Deduplication", "duplicatesFound()", TextUtils.join(", ", allClonedDuplicateIds));
 
                 if (duplicateIds.isEmpty()) {
                     Toast.makeText(getApplicationContext(), R.string.no_duplicates, Toast.LENGTH_SHORT).show();
                     Utils.revertOldApp(getApplicationContext());
                 } else {
-                    mDeDuplicate.setVisibility(View.GONE);
-                    mProgressBarHolder.setVisibility(View.VISIBLE);
-                    DiskLogger.log("Deduplication", "duplicatesFound: startDeleteService");
-                    Toast.makeText(Deduplication.this, "Log Generated Successfully", Toast.LENGTH_SHORT).show();
-                    finish();
-                    // startDeleteService(duplicateIds);
+                    if (isDone) {
+                        finishIt();
+                    } else {
+                        isDone = true;
+                    }
+                }
+            }
+
+            @Override
+            public void duplicatesFound(SparseArray<String> spareDuplicateIds) {
+                if (spareDuplicateIds.size() == 0) {
+                    Toast.makeText(getApplicationContext(), R.string.no_duplicates, Toast.LENGTH_SHORT).show();
+                    Utils.revertOldApp(getApplicationContext());
+                } else {
+                    final int size = spareDuplicateIds.size();
+                    StringBuilder mStringBuilder = new StringBuilder();
+                    mStringBuilder.append("mStringBuilder");
+                    for (int i = 0; i < size; i++) {
+                        mStringBuilder.append(spareDuplicateIds.get(i)).append(", ");
+                    }
+                    DiskLogger.log("Deduplication", "duplicatesFound: SparseDuplicates ", mStringBuilder.toString());
+                    if (isDone) {
+                        finishIt();
+                    } else {
+                        isDone = true;
+                    }
                 }
             }
         });
         findDuplicates.execute();
+    }
+
+    private void finishIt() {
+        Utils.revertOldApp(getApplicationContext());
+        mDeDuplicate.setVisibility(View.GONE);
+        mProgressBarHolder.setVisibility(View.VISIBLE);
+        DiskLogger.log("Deduplication", "duplicatesFound: startDeleteService");
+        Toast.makeText(Deduplication.this, "Log Generated Successfully", Toast.LENGTH_SHORT).show();
+        finish();
+        // startDeleteService(duplicateIds);
     }
 
     private void startDeleteService(ArrayList<String> duplicateIds) {

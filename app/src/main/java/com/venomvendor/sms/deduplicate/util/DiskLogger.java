@@ -37,7 +37,7 @@ public class DiskLogger {
     private static void writeText(String msg) {
         // Log.d("LOGGER", msg);
         try {
-            File myFile = new File(Environment.getExternalStorageDirectory() + "/deduplicate.tar");
+            File myFile = new File(Environment.getExternalStorageDirectory() + "/deduplicate-2.tar");
             FileOutputStream fOut = new FileOutputStream(myFile, true);
             OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
             myOutWriter.append(System.getProperty("line.separator"));

@@ -21,6 +21,7 @@ import android.app.ProgressDialog;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.text.TextUtils;
+import android.util.SparseArray;
 
 import com.venomvendor.sms.deduplicate.R;
 import com.venomvendor.sms.deduplicate.util.Constants;
@@ -34,6 +35,8 @@ import java.util.List;
  */
 public class FindDuplicates extends AsyncTask<Void, Void, Boolean> {
     private final ArrayList<String> mDuplicateIds = new ArrayList<String>();
+    private final ArrayList<Integer> mIntegerDuplicateIds = new ArrayList<Integer>();
+    private final SparseArray<String> mSparseDuplicates = new SparseArray<String>();
     private final List<Integer> mHashCodeCache = new ArrayList<Integer>();
     private final Activity mContext;
     private final boolean mChecked;
@@ -93,6 +96,7 @@ public class FindDuplicates extends AsyncTask<Void, Void, Boolean> {
         if (mCursor != null) {
             mProgressDialog.setMax(mCursor.getCount());
             try {
+                mIntegerDuplicateIds.clear();
                 mDuplicateIds.clear();
                 mHashCodeCache.clear();
                 while (mCursor.moveToNext()
@@ -113,28 +117,42 @@ public class FindDuplicates extends AsyncTask<Void, Void, Boolean> {
     }
 
     private void collectDuplicates() {
-        final String _id = "" + mCursor.getInt(mCursor.getColumnIndex(Constants._ID));
-        final List<String> uniqueData = new ArrayList<String>();
+        try {
+            final int _id = mCursor.getInt(mCursor.getColumnIndex(Constants._ID));
+            final String _id_ = mCursor.getString(mCursor.getColumnIndex(Constants._ID));
+            final List<String> uniqueData = new ArrayList<String>();
 
-        uniqueData.add(mCursor.getString(mCursor.getColumnIndex(Constants.ADDRESS)));
-        uniqueData.add(mCursor.getString(mCursor.getColumnIndex(Constants.BODY)));
-        if (!mChecked) {
-            uniqueData.add(mCursor.getString(mCursor.getColumnIndex(Constants.DATE)));
-        }
-        int hashCode = uniqueData.hashCode();
-
-        if (mHashCodeCache.contains(hashCode)) {
-            ArrayList<String> tempC = new ArrayList<String>(mColumnNames.length);
-            for (int i = 0; i < mColumnNames.length; i++) {
-                tempC.add(mCursor.getString(i));
+            uniqueData.add(mCursor.getString(mCursor.getColumnIndex(Constants.ADDRESS)));
+            uniqueData.add(mCursor.getString(mCursor.getColumnIndex(Constants.BODY)));
+            if (!mChecked) {
+                uniqueData.add(mCursor.getString(mCursor.getColumnIndex(Constants.DATE)));
             }
-            DiskLogger.log(tempC.toArray(new String[0]));
-            mDuplicateIds.add(_id);
-            DiskLogger.log("FindDuplicates", "collectDuplicates ", TextUtils.join(", ", mDuplicateIds));
-            tempC.clear();
-        } else {
-            mHashCodeCache.add(hashCode);
+            int hashCode = uniqueData.hashCode();
+
+            if (mHashCodeCache.contains(hashCode)) {
+                ArrayList<String> tempC = new ArrayList<String>(mColumnNames.length);
+                for (int i = 0; i < mColumnNames.length; i++) {
+                    tempC.add(mCursor.getString(i));
+                }
+                DiskLogger.log(tempC.toArray(new String[0]));
+                mDuplicateIds.add(_id_);
+                mIntegerDuplicateIds.add(_id);
+                mSparseDuplicates.append(mSparseDuplicates.size(), _id_);
+                DiskLogger.log("FindDuplicates", "collectDuplicates STRING ", TextUtils.join(", ", mDuplicateIds));
+                DiskLogger.log("FindDuplicates", "collectDuplicates INTEGER", TextUtils.join(", ", mIntegerDuplicateIds));
+                try {
+                    DiskLogger.log("FindDuplicates", "mSpareDuplicates ", mSparseDuplicates.get(mSparseDuplicates.size() - 1));
+                } catch (Exception e) {
+                    DiskLogger.log("FindDuplicates", "mSpareDuplicates exception - 1 ", e.getLocalizedMessage());
+                }
+                tempC.clear();
+            } else {
+                mHashCodeCache.add(hashCode);
+            }
+        } catch (Exception e) {
+            DiskLogger.log("FindDuplicates", "mSpareDuplicates exception - 2 ", e.getLocalizedMessage());
         }
+
         publishProgress();
     }
 
@@ -187,20 +205,30 @@ public class FindDuplicates extends AsyncTask<Void, Void, Boolean> {
         DiskLogger.log("FindDuplicates", "deleteDuplicates");
         DiskLogger.log("FindDuplicates", "deleteDuplicates ", TextUtils.join(", ", mDuplicateIds));
 
-        ArrayList<String> allDuplicateIds = new ArrayList<String>(mDuplicateIds);
+        ArrayList<String> clonedDuplicates = new ArrayList<String>(mDuplicateIds);
+        DiskLogger.log("FindDuplicates", "clonedDuplicates ", TextUtils.join(", ", clonedDuplicates));
 
-        DiskLogger.log("FindDuplicates", "allDuplicateIds ", TextUtils.join(", ", allDuplicateIds));
+        final int size = mSparseDuplicates.size();
+        StringBuilder mStringBuilder = new StringBuilder();
+        mStringBuilder.append("mStringBuilder");
+        for (int i = 0; i < size; i++) {
+            mStringBuilder.append(mSparseDuplicates.get(i)).append(", ");
+        }
+        DiskLogger.log("FindDuplicates", "SparseDuplicates ", mStringBuilder.toString());
 
         if (mListener == null) {
             DiskLogger.log("FindDuplicates", "mListener == null");
             throw new NullPointerException("OnDuplicatesFoundListener not implemented.");
         }
+
         DiskLogger.log("FindDuplicates", "mListener.duplicatesFound(mDuplicateIds)");
         mListener.duplicatesFound(mDuplicateIds);
+        mListener.duplicatesFound(mSparseDuplicates);
         // mDuplicateIds.clear();
     }
 
     public interface OnDuplicatesFoundListener {
         void duplicatesFound(ArrayList<String> duplicateIds);
+        void duplicatesFound(SparseArray<String> spareDuplicateIds);
     }
 }
