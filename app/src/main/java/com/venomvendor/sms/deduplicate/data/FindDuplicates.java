@@ -70,7 +70,16 @@ public class FindDuplicates extends AsyncTask<Void, Void, Boolean> {
     @Override
     protected Boolean doInBackground(Void... params) {
         String sortOrder = mChecked ? Constants.DATE + (mKeepFirst ? " ASC" : " DESC") : null;
-        mCursor = mContext.getContentResolver().query(Constants.CONTENT_URI, null, null, null, sortOrder);
+        String[] projection = new String[]{
+                Constants._ID,
+                Constants.ADDRESS,
+                Constants.BODY,
+                Constants.DATE,
+                Constants.DATE_SENT,
+                Constants.TYPE
+        };
+
+        mCursor = mContext.getContentResolver().query(Constants.CONTENT_URI, projection, null, null, sortOrder);
         if (mCursor != null) {
             mProgressDialog.setMax(mCursor.getCount());
             try {
@@ -92,7 +101,14 @@ public class FindDuplicates extends AsyncTask<Void, Void, Boolean> {
     }
 
     private void collectDuplicates() {
-        final String _id = Integer.toString(mCursor.getInt(0));
+        final int __id = mCursor.getInt(mCursor.getColumnIndex(Constants._ID));
+        final String _id;
+        if (__id == 0) {
+            _id = mCursor.getString(mCursor.getColumnIndex(Constants._ID));
+        } else {
+            _id = String.valueOf(__id);
+        }
+
         final List<String> uniqueData = new ArrayList<String>();
 
         uniqueData.add(mCursor.getString(mCursor.getColumnIndex(Constants.ADDRESS)));
@@ -155,7 +171,6 @@ public class FindDuplicates extends AsyncTask<Void, Void, Boolean> {
             throw new NullPointerException("OnDuplicatesFoundListener not implemented.");
         }
         mListener.duplicatesFound(mDuplicateIds);
-        mDuplicateIds.clear();
     }
 
     public interface OnDuplicatesFoundListener {

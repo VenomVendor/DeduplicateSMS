@@ -31,8 +31,12 @@ public class Constants {
     public static final String CURRENT_SMS_APP = "currentSmsApp";
     public static final String SHOW_EULA = "eula";
     public static final Uri CONTENT_URI = Uri.parse("content://sms");
+    public static final String _ID = "_id";
     public static final String ADDRESS = "address";
     public static final String DATE = "date";
+    public static final String DATE_SENT = "date_sent";
+    public static final String TYPE = "type";
+
     public static final String BODY = "body";
 
     private Constants() {
