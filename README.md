@@ -10,10 +10,7 @@ Support from **Android 2.2**, including **Android 6.0** *(Marshmallow)* which re
 </a>
 
 # Screenshots
-<img src="https://raw.githubusercontent.com/VenomVendor/DeduplicateSMS/master/screenshots/Screenshot_01.jpg" alt="Home Screen" width="400" /> 
-<img src="https://raw.githubusercontent.com/VenomVendor/DeduplicateSMS/master/screenshots/Screenshot_02.jpg" alt="Reading Messages" width="400" /> 
-<img src="https://raw.githubusercontent.com/VenomVendor/DeduplicateSMS/master/screenshots/Screenshot_03.jpg" alt="Deleting Messages" width="400" /> 
-<img src="https://raw.githubusercontent.com/VenomVendor/DeduplicateSMS/master/screenshots/Screenshot_04.jpg" alt="Change App Request" width="400" /> 
+<img src="https://raw.githubusercontent.com/VenomVendor/DeduplicateSMS/master/screenshots/Screenshot_01.jpg" alt="Home Screen" width="400" /> <img src="https://raw.githubusercontent.com/VenomVendor/DeduplicateSMS/master/screenshots/Screenshot_02.jpg" alt="Reading Messages" width="400" /> <img src="https://raw.githubusercontent.com/VenomVendor/DeduplicateSMS/master/screenshots/Screenshot_03.jpg" alt="Deleting Messages" width="400" /> <img src="https://raw.githubusercontent.com/VenomVendor/DeduplicateSMS/master/screenshots/Screenshot_04.jpg" alt="Change App Request" width="400" /> 
 
 # License
 	Copyright (C) 2015 VenomVendor <info@VenomVendor.com>
