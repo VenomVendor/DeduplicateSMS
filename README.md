@@ -15,7 +15,7 @@ Support from **Android 2.2**, including **Android 6.0** *(Marshmallow)* which re
 <img src="https://raw.githubusercontent.com/VenomVendor/DeduplicateSMS/master/screenshots/Screenshot_03.jpg" alt="Deleting Messages" width="400" /> 
 <img src="https://raw.githubusercontent.com/VenomVendor/DeduplicateSMS/master/screenshots/Screenshot_04.jpg" alt="Change App Request" width="400" /> 
 
-#License
+# License
 	Copyright (C) 2015 VenomVendor <info@VenomVendor.com>
 
 	Licensed under the Apache License, Version 2.0 (the "License");
