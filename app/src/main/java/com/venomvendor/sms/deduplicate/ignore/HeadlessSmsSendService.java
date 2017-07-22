@@ -24,6 +24,7 @@ import android.os.IBinder;
  * Created by VenomVendor on 11/8/15.
  */
 public class HeadlessSmsSendService extends Service {
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;

@@ -22,6 +22,7 @@ import android.net.Uri;
  * Created by VenomVendor on 11/8/15.
  */
 public final class Constants {
+
     public static final String CURRENT_SMS_APP = "currentSmsApp";
     public static final String SHOW_EULA = "eula";
     public static final Uri CONTENT_URI = Uri.parse("content://sms");

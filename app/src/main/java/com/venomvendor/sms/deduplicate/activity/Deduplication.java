@@ -45,10 +45,10 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.venomvendor.sms.deduplicate.BuildConfig;
 import com.venomvendor.sms.deduplicate.R;
 import com.venomvendor.sms.deduplicate.data.FindDuplicates;
 import com.venomvendor.sms.deduplicate.service.DeleteSMSAsync;
-import com.venomvendor.sms.deduplicate.service.OnDeletedListener;
 import com.venomvendor.sms.deduplicate.util.Constants;
 import com.venomvendor.sms.deduplicate.util.Utils;
 
@@ -65,21 +65,28 @@ public class Deduplication extends Activity implements View.OnClickListener {
     private static final int UPDATE_PERMISSIONS = 254;
     private static final int RUNTIME_PERMISSIONS_CODE = 255;
     private static final String[] REQUIRED_PERMISSIONS = {permission.READ_SMS};
-    private static final String DEFAULT_DEL = "50";
+    private static final int DEFAULT_DEL = BuildConfig.DEBUG ? 2 : 50;
     private String mFormat;
-    private DeleteSMSAsync mSmsDeleter;
     private int mTotalMessages;
+
+    private DeleteSMSAsync mSmsDeleter;
+
     private LinearLayout mProgressBarHolder;
     private ProgressBar mProgressBar;
+
     private Button mDeDuplicate;
     private Button mCancel;
     private Button mRevert;
+
     private TextView mDeleted;
     private TextView mRevertMessage;
+
     private EditText mDeleteBy;
+
     private CheckedTextView mIgnoreTimestamp;
     private LinearLayout mIgnoreMessage;
     private RadioButton mKeepFirst;
+
     private SharedPreferences mPref;
 
     @Override
@@ -103,23 +110,15 @@ public class Deduplication extends Activity implements View.OnClickListener {
                 .setMessage(getString(R.string.eula))
                 .setCancelable(false)
                 .setPositiveButton(android.R.string.ok,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                SharedPreferences.Editor editor = mPref.edit();
-                                editor.putBoolean(Constants.SHOW_EULA, false);
-                                editor.commit();
-                                dialog.dismiss();
-                                initViews();
-                            }
+                        (dialog, which) -> {
+                            SharedPreferences.Editor editor = mPref.edit();
+                            editor.putBoolean(Constants.SHOW_EULA, false);
+                            editor.commit();
+                            dialog.dismiss();
+                            initViews();
                         })
                 .setNegativeButton(android.R.string.cancel,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                finish();
-                            }
-                        });
+                        (dialog, which) -> finish());
         builder.create().show();
     }
 
@@ -177,19 +176,13 @@ public class Deduplication extends Activity implements View.OnClickListener {
                 //Educate User
                 showCustomDialog(getString(R.string.required_permissions),
                         getString(R.string.m_permission_inform),
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                //ask permissions.
-                                requestPermissions(REQUIRED_PERMISSIONS, RUNTIME_PERMISSIONS_CODE);
-                            }
-                        }, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                deadLock();
-                            }
+                        (dialog, which) -> {
+                            dialog.dismiss();
+                            //ask permissions.
+                            requestPermissions(REQUIRED_PERMISSIONS, RUNTIME_PERMISSIONS_CODE);
+                        }, (dialog, which) -> {
+                            dialog.dismiss();
+                            deadLock();
                         }
                 );
             }
@@ -213,15 +206,12 @@ public class Deduplication extends Activity implements View.OnClickListener {
     private void permissionsDenied() {
         showCustomDialog(getString(R.string.required_permissions),
                 String.format(getString(R.string.permission_explain), getString(R.string.app_name)),
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        Intent intent = new Intent(
-                                android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                        intent.setData(Uri.parse("package:" + getPackageName()));
-                        startActivityForResult(intent, UPDATE_PERMISSIONS);
-                    }
+                (dialog, which) -> {
+                    dialog.dismiss();
+                    Intent intent = new Intent(
+                            android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                    intent.setData(Uri.parse("package:" + getPackageName()));
+                    startActivityForResult(intent, UPDATE_PERMISSIONS);
                 }, null);
     }
 
@@ -248,12 +238,9 @@ public class Deduplication extends Activity implements View.OnClickListener {
         showCustomDialog(getString(R.string.permissions_revoked), String.format("%s\n%s %s",
                 getString(R.string.app_cannot_run), getString(R.string.app_will_exit),
                 getString(android.R.string.ok)),
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        finish();
-                    }
+                (dialog, which) -> {
+                    dialog.dismiss();
+                    finish();
                 }, null
         );
     }
@@ -284,12 +271,7 @@ public class Deduplication extends Activity implements View.OnClickListener {
     }
 
     private void revertApp() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Utils.revertOldApp(getApplicationContext());
-            }
-        }, 3000);
+        new Handler().postDelayed(() -> Utils.revertOldApp(getApplicationContext()), 3000);
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
@@ -312,20 +294,10 @@ public class Deduplication extends Activity implements View.OnClickListener {
     private void showWarning() {
         AlertDialog.Builder warningDialog = new AlertDialog.Builder(this);
         warningDialog.setMessage(R.string.warning_message);
-        warningDialog.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-                findDuplicates();
-            }
-        });
+        warningDialog.setPositiveButton(android.R.string.ok, (dialog, id) -> findDuplicates());
 
         warningDialog.setNegativeButton(android.R.string.cancel,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
-                    }
-                });
+                (dialog, id) -> dialog.dismiss());
 
         AlertDialog dialog = warningDialog.create();
         dialog.setCancelable(false);
@@ -336,39 +308,45 @@ public class Deduplication extends Activity implements View.OnClickListener {
         FindDuplicates findDuplicates = new FindDuplicates(this,
                 mIgnoreTimestamp.isChecked(),
                 mKeepFirst.isChecked());
-        findDuplicates.setOnDuplicatesFoundListener(new FindDuplicates.OnDuplicatesFoundListener() {
-            @Override
-            public void duplicatesFound(ArrayList<String> duplicateIds) {
-                if (duplicateIds.isEmpty()) {
-                    Toast.makeText(getApplicationContext(), R.string.no_duplicates,
-                            Toast.LENGTH_SHORT).show();
-                    Utils.revertOldApp(getApplicationContext());
-                } else {
-                    mDeDuplicate.setVisibility(View.GONE);
-                    mProgressBarHolder.setVisibility(View.VISIBLE);
-                    startDeleteService(duplicateIds);
-                }
+        findDuplicates.setOnDuplicatesFoundListener(duplicateIds -> {
+            if (duplicateIds.isEmpty()) {
+                showToast(getString(R.string.no_duplicates));
+                revertApp();
+            } else {
+                showConfirmation(duplicateIds);
             }
         });
         findDuplicates.execute();
     }
 
-    private void startDeleteService(ArrayList<String> duplicateIds) {
+    private void showConfirmation(ArrayList<String> duplicateIds) {
         mTotalMessages = duplicateIds.size();
         mFormat = getResources().getQuantityString(R.plurals.deleted_messages, mTotalMessages);
 
+        AlertDialog.Builder confirmationDialog = new AlertDialog.Builder(this);
+        confirmationDialog.setCancelable(false);
+        confirmationDialog.setMessage(getResources()
+                .getQuantityString(R.plurals.delete_duplicates, mTotalMessages, mTotalMessages));
+
+        confirmationDialog.setPositiveButton(getString(android.R.string.ok),
+                (dialog, which) -> {
+                    dialog.dismiss();
+                    mDeDuplicate.setVisibility(View.GONE);
+                    mProgressBarHolder.setVisibility(View.VISIBLE);
+                    startDeleteService(duplicateIds);
+                });
+        confirmationDialog.setNegativeButton(getString(android.R.string.cancel),
+                (dialog, which) -> dialog.dismiss());
+        confirmationDialog.show();
+    }
+
+    private void startDeleteService(ArrayList<String> duplicateIds) {
         mProgressBar.setMax(mTotalMessages);
 
-        String del = mDeleteBy.getText().toString().trim();
-        del = TextUtils.isEmpty(del) ? DEFAULT_DEL : del;
-        int deleteBy = Math.abs(Integer.valueOf(del));
+        int deleteBy = getPerBatch();
+        mSmsDeleter = new DeleteSMSAsync(this, duplicateIds, deleteBy,
+                this::updateDeletedItems);
 
-        mSmsDeleter = new DeleteSMSAsync(this, duplicateIds, deleteBy, new OnDeletedListener() {
-            @Override
-            public void onResponse(final int deletedMsgs, final boolean interrupted) {
-                updateDeletedItems(deletedMsgs, interrupted);
-            }
-        });
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             mSmsDeleter.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
@@ -376,15 +354,20 @@ public class Deduplication extends Activity implements View.OnClickListener {
         }
     }
 
+    private int getPerBatch() {
+        String del = mDeleteBy.getText().toString().trim();
+        del = TextUtils.isEmpty(del) ? "" + DEFAULT_DEL : del;
+        int deleteBy = Math.abs(Integer.valueOf(del));
+        deleteBy = Math.max(1, deleteBy);
+        return Math.min(deleteBy, 100);
+    }
+
     private void updateDeletedItems(int deletedMsgs, boolean interrupted) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mDeleted.setText(String.format(mFormat, deletedMsgs, mTotalMessages));
-                if (interrupted) {
-                    showToast(String.format(mFormat, deletedMsgs, mTotalMessages));
-                    cancelDeletion();
-                }
+        runOnUiThread(() -> {
+            mDeleted.setText(String.format(mFormat, deletedMsgs, mTotalMessages));
+            if (interrupted) {
+                showToast(String.format(mFormat, deletedMsgs, mTotalMessages));
+                cancelDeletion();
             }
         });
     }
@@ -407,12 +390,7 @@ public class Deduplication extends Activity implements View.OnClickListener {
                 mRevert.setVisibility(View.GONE);
                 mRevertMessage.setVisibility(View.VISIBLE);
                 showCustomDialog(getString(R.string.failed), getString(R.string.failure_message),
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        }, null);
+                        (dialog, which) -> dialog.dismiss(), null);
             }
         } else if (requestCode == UPDATE_PERMISSIONS) {
             if (checkSelfPermission(REQUIRED_PERMISSIONS[0]) != PackageManager.PERMISSION_GRANTED) {

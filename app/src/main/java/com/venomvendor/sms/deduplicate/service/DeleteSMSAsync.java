@@ -23,7 +23,7 @@ public class DeleteSMSAsync extends AsyncTask<Void, Integer, Integer> {
                           int deleteBy, OnDeletedListener onDeletedListener) {
         contentResolver = context.getContentResolver();
         mDuplicateIds = new DuplicateList<>(duplicateIds);
-        mDeleteBy = Math.min(deleteBy, 100);
+        mDeleteBy = deleteBy;
         mOnDeletedListener = onDeletedListener;
         Collections.sort(mDuplicateIds);
     }
