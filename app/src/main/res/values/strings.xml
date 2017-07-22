@@ -25,6 +25,7 @@
     <string name="warning_desc">This will delete similar messages from the SAME sender irrespective of any date.</string>
     <string name="keep_first">Keep first message.</string>
     <string name="keep_last">Keep last message.</string>
+    <string name="delete_by">Delete X SMS in batch, max 99</string>
 
     <!-- Plurals -->
     <plurals name="deleted_messages" formatted="true">

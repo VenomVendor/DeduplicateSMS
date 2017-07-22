@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.venomvendor.sms.deduplicate"
-    android:installLocation="preferExternal">
+    package="com.venomvendor.sms.deduplicate">
 
     <uses-permission android:name="android.permission.READ_SMS"/>
     <uses-permission android:name="android.permission.WRITE_SMS"/>
@@ -17,7 +16,9 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning,UnusedAttribute">
 
-        <activity android:name=".activity.Deduplication">
+        <activity
+            android:name=".activity.Deduplication"
+            android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -81,9 +82,6 @@
                 <data android:scheme="mmsto"/>
             </intent-filter>
         </service>
-        <service
-            android:name=".service.DeleteSmsService"
-            android:exported="false"></service>
     </application>
 
 </manifest>
