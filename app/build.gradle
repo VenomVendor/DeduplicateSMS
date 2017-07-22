@@ -59,7 +59,10 @@ android {
             minifyEnabled rootProject.ext.DEBUG
             signingConfig signingConfigs.release
             versionNameSuffix rootProject.ext.RELEASE_SUFFIX
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            proguardFiles './pro-guard/proguard-optimize.pro',
+                    './pro-guard/proguard-rules-aggressive.pro',
+                    './pro-guard/proguard-rules-consumer.pro',
+                    './pro-guard/proguard-rules-log.pro'
         }
         debug {
             debuggable rootProject.ext.DEBUG
