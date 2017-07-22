@@ -16,13 +16,13 @@
 
 package com.venomvendor.sms.deduplicate.data;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.AsyncTask;
 
+import com.venomvendor.sms.deduplicate.BuildConfig;
 import com.venomvendor.sms.deduplicate.R;
 import com.venomvendor.sms.deduplicate.util.Constants;
 
@@ -32,20 +32,19 @@ import java.util.List;
 /*
  * Created by VenomVendor on 11/8/15.
  */
-public class FindDuplicates extends AsyncTask<Void, Void, Boolean> {
+public class FindDuplicates extends AsyncTask<Void, Integer, Boolean> {
 
-    private final ArrayList<String> mDuplicateIds = new ArrayList<String>();
-    private final List<Integer> mHashCodeCache = new ArrayList<Integer>();
-    private final Activity mContext;
+    private final ArrayList<String> mDuplicateIds = new ArrayList<>();
+
+    @SuppressLint("StaticFieldLeak")
+    private final Activity mActivity;
     private final boolean mChecked;
     private final boolean mKeepFirst;
     private ProgressDialog mProgressDialog;
-    private Cursor mCursor;
-    private int mIndex;
     private OnDuplicatesFoundListener mListener;
 
     public FindDuplicates(Activity activity, boolean checked, boolean keepFirst) {
-        this.mContext = activity;
+        this.mActivity = activity;
         this.mChecked = checked;
         this.mKeepFirst = keepFirst;
     }
@@ -60,8 +59,12 @@ public class FindDuplicates extends AsyncTask<Void, Void, Boolean> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        mProgressDialog = new ProgressDialog(mContext);
-        mProgressDialog.setMessage(mContext.getString(R.string.reading_msg));
+        if (mListener == null) {
+            throw new NullPointerException("OnDuplicatesFoundListener not implemented.");
+        }
+
+        mProgressDialog = new ProgressDialog(mActivity);
+        mProgressDialog.setMessage(mActivity.getString(R.string.reading_msg));
         mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         mProgressDialog.setCancelable(false);
         mProgressDialog.show();
@@ -70,7 +73,7 @@ public class FindDuplicates extends AsyncTask<Void, Void, Boolean> {
     @Override
     protected Boolean doInBackground(Void... params) {
         String sortOrder = mChecked ? Constants.DATE + (mKeepFirst ? " ASC" : " DESC") : null;
-        String[] projection = new String[]{
+        String[] projection = new String[] {
                 Constants._ID,
                 Constants.ADDRESS,
                 Constants.BODY,
@@ -78,58 +81,65 @@ public class FindDuplicates extends AsyncTask<Void, Void, Boolean> {
                 Constants.DATE_SENT,
                 Constants.TYPE
         };
-
-        mCursor = mContext.getContentResolver().query(Constants.CONTENT_URI, projection, null, null, sortOrder);
-        if (mCursor != null) {
-            mProgressDialog.setMax(mCursor.getCount());
+        Cursor cursor = mActivity.getContentResolver().query(Constants.CONTENT_URI, projection,
+                null,
+                null,
+                sortOrder);
+        if (cursor != null) {
+            mProgressDialog.setMax(cursor.getCount());
+            List<Integer> hashCodeCache = new ArrayList<>();
             try {
                 mDuplicateIds.clear();
-                mHashCodeCache.clear();
-                while (mCursor.moveToNext()) {
-                    mIndex++;
-                    collectDuplicates();
+                int currentIndex = 0;
+                while (cursor.moveToNext() && getMax()) {
+                    currentIndex++;
+                    collectDuplicates(cursor, hashCodeCache, currentIndex);
                 }
             } catch (Exception ignore) {
                 return false;
             } finally {
-                mHashCodeCache.clear();
-                mCursor.close();
+                hashCodeCache.clear();
+                cursor.close();
             }
             return true;
         }
         return null;
     }
 
-    private void collectDuplicates() {
-        final int __id = mCursor.getInt(mCursor.getColumnIndex(Constants._ID));
+    private boolean getMax() {
+        return !BuildConfig.DEBUG || mDuplicateIds.size() < 20;
+    }
+
+    private void collectDuplicates(Cursor cursor, List<Integer> hashCodeCache, int currentIndex) {
+        final int __id = cursor.getInt(cursor.getColumnIndex(Constants._ID));
         final String _id;
         if (__id == 0) {
-            _id = mCursor.getString(mCursor.getColumnIndex(Constants._ID));
+            _id = cursor.getString(cursor.getColumnIndex(Constants._ID));
         } else {
             _id = String.valueOf(__id);
         }
 
-        final List<String> uniqueData = new ArrayList<String>();
+        final List<String> uniqueData = new ArrayList<>();
 
-        uniqueData.add(mCursor.getString(mCursor.getColumnIndex(Constants.ADDRESS)));
-        uniqueData.add(mCursor.getString(mCursor.getColumnIndex(Constants.BODY)));
+        uniqueData.add(cursor.getString(cursor.getColumnIndex(Constants.ADDRESS)));
+        uniqueData.add(cursor.getString(cursor.getColumnIndex(Constants.BODY)));
         if (!mChecked) {
-            uniqueData.add(mCursor.getString(mCursor.getColumnIndex(Constants.DATE)));
+            uniqueData.add(cursor.getString(cursor.getColumnIndex(Constants.DATE)));
         }
         int hashCode = uniqueData.hashCode();
 
-        if (mHashCodeCache.contains(hashCode)) {
+        if (hashCodeCache.contains(hashCode)) {
             mDuplicateIds.add(_id);
         } else {
-            mHashCodeCache.add(hashCode);
+            hashCodeCache.add(hashCode);
         }
-        publishProgress();
+        publishProgress(currentIndex);
     }
 
     @Override
-    protected void onProgressUpdate(Void... values) {
+    protected void onProgressUpdate(Integer... values) {
         super.onProgressUpdate(values);
-        mProgressDialog.setProgress(mIndex);
+        mProgressDialog.setProgress(values[0]);
         mProgressDialog.setSecondaryProgress(mDuplicateIds.size());
     }
 
@@ -137,44 +147,16 @@ public class FindDuplicates extends AsyncTask<Void, Void, Boolean> {
     protected void onPostExecute(Boolean result) {
         super.onPostExecute(result);
         mProgressDialog.dismiss();
-        showConfirmation();
-    }
-
-    private void showConfirmation() {
-        if (mDuplicateIds.isEmpty()) {
-            deleteDuplicates();
-        } else {
-            AlertDialog.Builder confirmationDialog = new AlertDialog.Builder(mContext);
-            confirmationDialog.setCancelable(false);
-            confirmationDialog.setMessage(mContext.getResources()
-                    .getQuantityString(R.plurals.delete_duplicates, mDuplicateIds.size(), mDuplicateIds.size()));
-
-            confirmationDialog.setPositiveButton(mContext.getString(android.R.string.ok), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                    deleteDuplicates();
-                }
-            });
-            confirmationDialog.setNegativeButton(mContext.getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
-            confirmationDialog.show();
-        }
+        mProgressDialog = null;
+        deleteDuplicates();
     }
 
     private void deleteDuplicates() {
-        if (mListener == null) {
-            throw new NullPointerException("OnDuplicatesFoundListener not implemented.");
-        }
         mListener.duplicatesFound(mDuplicateIds);
     }
 
     public interface OnDuplicatesFoundListener {
+
         void duplicatesFound(ArrayList<String> duplicateIds);
     }
-
 }

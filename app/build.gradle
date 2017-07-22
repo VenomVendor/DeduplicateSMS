@@ -1,26 +1,31 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "24.0.0"
+    compileSdkVersion 26
+    buildToolsVersion '26.0.0'
 
     defaultConfig {
-        applicationId "com.venomvendor.sms.deduplicate"
+        applicationId 'com.venomvendor.sms.deduplicate'
         minSdkVersion 8
-        targetSdkVersion 24
+        targetSdkVersion 26
         versionCode rootProject.ext.versionCode
         versionName rootProject.ext.versionName
-        jackOptions {
-            enabled rootProject.ext.enableJack
+        if (rootProject.ext.enableJack) {
+            jackOptions {
+                enabled false
+            }
         }
     }
 
+    flavorDimensions 'buildType'
     productFlavors {
         froyo {
+            dimension 'buildType'
             minSdkVersion 8
             versionCode rootProject.ext.froyo
         }
         donut {
+            dimension 'buildType'
             minSdkVersion 4
             maxSdkVersion 7
             targetSdkVersion 7
@@ -37,6 +42,7 @@ android {
                 storePassword KEYSTORE_PASSWORD
             }
             catch (ex) {
+                //noinspection GrUnresolvedAccess
                 throw new InvalidUserDataException("You should define KEY_ALIAS, KEY_PASSWORD & " +
                         "KEYSTORE_PASSWORD in gradle.properties. \n ${ex.getLocalizedMessage()}")
             }
@@ -53,14 +59,17 @@ android {
             minifyEnabled rootProject.ext.DEBUG
             signingConfig signingConfigs.release
             versionNameSuffix rootProject.ext.RELEASE_SUFFIX
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            proguardFiles './pro-guard/proguard-optimize.pro',
+                    './pro-guard/proguard-rules-aggressive.pro',
+                    './pro-guard/proguard-rules-consumer.pro',
+                    './pro-guard/proguard-rules-log.pro'
         }
         debug {
             debuggable rootProject.ext.DEBUG
             jniDebuggable rootProject.ext.DEBUG
             renderscriptDebuggable rootProject.ext.DEBUG
             pseudoLocalesEnabled rootProject.ext.DEBUG
-            shrinkResources rootProject.ext.DEBUG //Always True
+            shrinkResources !rootProject.ext.DEBUG
             minifyEnabled !rootProject.ext.DEBUG
             signingConfig signingConfigs.release
             versionNameSuffix rootProject.ext.DEBUG_SUFFIX
@@ -79,10 +88,11 @@ android {
     lintOptions {
         checkReleaseBuilds rootProject.ext.checkReleaseBuilds
         abortOnError rootProject.ext.abortOnError
+        disable 'IconMissingDensityFolder'
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_6
-        targetCompatibility JavaVersion.VERSION_1_6
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
     }
 }

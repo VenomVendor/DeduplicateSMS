@@ -24,6 +24,7 @@ import android.content.Intent;
  * Created by VenomVendor on 11/8/15.
  */
 public class SmsReceiver extends BroadcastReceiver {
+
     @Override
     public void onReceive(Context context, Intent intent) {
 

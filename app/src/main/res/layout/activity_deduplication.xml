@@ -13,6 +13,12 @@
         android:orientation="vertical"
         android:padding="@dimen/activity_margin">
 
+        <ProgressBar
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:indeterminate="true" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -27,7 +33,10 @@
                 android:paddingLeft="@dimen/min_padding"
                 android:paddingRight="@dimen/min_padding"
                 android:text="@string/deduplicate"
-                android:textAllCaps="false" />
+                android:textAllCaps="false">
+
+                <requestFocus />
+            </Button>
 
             <Button
                 android:id="@+id/more_apps"
@@ -39,6 +48,15 @@
                 android:text="@string/more_apps"
                 android:textAllCaps="false" />
         </LinearLayout>
+
+        <EditText
+            android:id="@+id/per_iteration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/activity_margin"
+            android:hint="@string/delete_by"
+            android:inputType="number"
+            android:maxLength="2" />
 
         <CheckedTextView
             android:id="@+id/ignore_timestamp"
@@ -177,6 +195,7 @@
                 android:layout_height="@dimen/button_height"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
+                android:padding="@dimen/min_padding"
                 android:text="@string/revert"
                 android:textAllCaps="false"
                 android:textColor="@android:color/black" />

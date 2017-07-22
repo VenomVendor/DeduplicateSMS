@@ -28,6 +28,7 @@ import android.provider.Telephony.Sms;
  * Created by VenomVendor on 11/9/15.
  */
 public class Utils {
+
     private Utils() {
     }
 
@@ -35,7 +36,8 @@ public class Utils {
     public static void revertOldApp(Context context) {
         if (isValidMessageApp(context)) {
             SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-            String defaultSmsApp = pref.getString(Constants.CURRENT_SMS_APP, Sms.getDefaultSmsPackage(context));
+            String defaultSmsApp = pref.getString(Constants.CURRENT_SMS_APP,
+                    Sms.getDefaultSmsPackage(context));
             Intent revert = new Intent(Sms.Intents.ACTION_CHANGE_DEFAULT);
             revert.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             revert.putExtra(Sms.Intents.EXTRA_PACKAGE_NAME, defaultSmsApp);

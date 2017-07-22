@@ -21,13 +21,8 @@ import android.net.Uri;
 /*
  * Created by VenomVendor on 11/8/15.
  */
-public class Constants {
-    public static final String DUPLICATE_IDS = "duplicateIds";
-    public static final String FROM_SERVICE = "fromService";
-    public static final String DELETED_MSGS = "deletedMessages";
-    public static final String TOTAL_MSGS = "totalMessages";
-    public static final String INTENT_FILTER = "messageStatus";
-    public static final String INTERRUPTED = "interrupted";
+public final class Constants {
+
     public static final String CURRENT_SMS_APP = "currentSmsApp";
     public static final String SHOW_EULA = "eula";
     public static final Uri CONTENT_URI = Uri.parse("content://sms");
