@@ -2,10 +2,17 @@
 buildscript {
     repositories {
         jcenter()
-        maven { url 'https://maven.google.com' }
+        google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.0-alpha7'
+        classpath 'com.android.tools.build:gradle:3.2.1'
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+        google()
     }
 }
 
@@ -13,26 +20,26 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
-task wrapper(type: Wrapper) {
-    // Execute "./gradlew wrapper --distribution-type=all" when modified.
-    gradleVersion = '4.1-milestone-1'
-}
-
 ext {
     DEBUG = true
     MAJOR = 2
-    MINOR = 0
+    MINOR = 1
     PATCH = 0
-    RELEASE_SUFFIX = '' //"alpha/beta/debug" TODO-Always check during release.
+
+    // "alpha/beta/debug" TODO-Always check during release.
+    RELEASE_SUFFIX = ''
     DEBUG_SUFFIX = "${RELEASE_SUFFIX}-debug"
-    versionName = "${MAJOR}.${MINOR}.${PATCH}" //For Users.
-    versionCode = computeVersionName() //For PlayStore.
+
+    // For Users.
+    versionName = "${MAJOR}.${MINOR}.${PATCH}"
+
+    // For PlayStore.
+    versionCode = computeVersionName()
     donut = versionCode
     froyo = versionCode + 1
     KEY_LOCATION = '../key.keystore'
     abortOnError = false
     checkReleaseBuilds = true
-    enableJack = false
 }
 
 def static computeVersionName() {
