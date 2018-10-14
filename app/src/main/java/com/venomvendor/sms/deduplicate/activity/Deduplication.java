@@ -20,6 +20,7 @@ import android.Manifest.permission;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -32,27 +33,34 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.provider.Telephony;
 import android.provider.Telephony.Sms;
+import android.telephony.TelephonyManager;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.venomvendor.sms.deduplicate.BuildConfig;
 import com.venomvendor.sms.deduplicate.R;
+import com.venomvendor.sms.deduplicate.data.Country;
 import com.venomvendor.sms.deduplicate.data.FindDuplicates;
 import com.venomvendor.sms.deduplicate.service.DeleteSMSAsync;
 import com.venomvendor.sms.deduplicate.util.Constants;
 import com.venomvendor.sms.deduplicate.util.Utils;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
 
 import static com.venomvendor.sms.deduplicate.util.Utils.isValidMessageApp;
 
@@ -66,6 +74,7 @@ public class Deduplication extends Activity implements View.OnClickListener {
     private static final int RUNTIME_PERMISSIONS_CODE = 255;
     private static final String[] REQUIRED_PERMISSIONS = {permission.READ_SMS};
     private static final int DEFAULT_DEL = BuildConfig.DEBUG ? 2 : 50;
+    private static final String PRE_SELECT = "Select your country";
     private String mFormat;
     private int mTotalMessages;
 
@@ -84,10 +93,13 @@ public class Deduplication extends Activity implements View.OnClickListener {
     private EditText mDeleteBy;
 
     private CheckedTextView mIgnoreTimestamp;
+    private CheckedTextView mIgnoreSpace;
     private LinearLayout mIgnoreMessage;
     private RadioButton mKeepFirst;
+    private Spinner mSpinner;
 
     private SharedPreferences mPref;
+    private AlertDialog mDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,11 +145,44 @@ public class Deduplication extends Activity implements View.OnClickListener {
         mProgressBarHolder = findViewById(R.id.progress_bar_holder);
         mProgressBar = findViewById(R.id.progress_bar);
         mIgnoreTimestamp = findViewById(R.id.ignore_timestamp);
+        mIgnoreSpace = findViewById(R.id.ignore_space);
         mIgnoreMessage = findViewById(R.id.ignore_timestamp_message);
         mKeepFirst = findViewById(R.id.keep_first);
         mDeleteBy = findViewById(R.id.per_iteration);
 
+        mSpinner = findViewById(R.id.country_selector);
+
+        addData();
+
         initListeners();
+    }
+
+    private void addData() {
+        String[] countryCodes = Locale.getISOCountries();
+        List<Country> countries = new ArrayList<>(countryCodes.length + 1);
+        for (String countryCode : countryCodes) {
+            Locale locale = new Locale("", countryCode);
+            String countryNameInEng = locale.getDisplayCountry(Locale.ENGLISH);
+            Country country = new Country(locale.getCountry(), countryNameInEng);
+            countries.add(country);
+        }
+
+        Collections.sort(countries);
+
+        countries.add(0, new Country(getCountry(), PRE_SELECT));
+
+        ArrayAdapter<Country> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, countries);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mSpinner.setAdapter(adapter);
+    }
+
+    private String getCountry() {
+        TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        if (tm == null) {
+            return Locale.getDefault().getCountry();
+        }
+        return tm.getNetworkCountryIso().toUpperCase(Locale.ENGLISH);
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
@@ -147,6 +192,7 @@ public class Deduplication extends Activity implements View.OnClickListener {
         mCancel.setOnClickListener(this);
         mRevert.setOnClickListener(this);
         mIgnoreTimestamp.setOnClickListener(this);
+        mIgnoreSpace.setOnClickListener(this);
 
         if (!isValidMessageApp(this)) {
             SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(
@@ -230,8 +276,8 @@ public class Deduplication extends Activity implements View.OnClickListener {
         if (cancelListener != null) {
             builder.setNegativeButton(android.R.string.cancel, cancelListener);
         }
-        final AlertDialog dialog = builder.create();
-        dialog.show();
+        mDialog = builder.create();
+        mDialog.show();
     }
 
     private void deadLock() {
@@ -271,7 +317,7 @@ public class Deduplication extends Activity implements View.OnClickListener {
     }
 
     private void revertApp() {
-        new Handler().postDelayed(() -> Utils.revertOldApp(getApplicationContext()), 3000);
+        new Handler().postDelayed(() -> Utils.revertOldApp(getApplicationContext()), 1000);
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
@@ -305,9 +351,14 @@ public class Deduplication extends Activity implements View.OnClickListener {
     }
 
     private void findDuplicates() {
+        String selectedCountry = ((Country) mSpinner.getSelectedItem()).getCountryCode();
+
         FindDuplicates findDuplicates = new FindDuplicates(this,
                 mIgnoreTimestamp.isChecked(),
-                mKeepFirst.isChecked());
+                mIgnoreSpace.isChecked(),
+                mKeepFirst.isChecked(),
+                selectedCountry
+        );
         findDuplicates.setOnDuplicatesFoundListener(duplicateIds -> {
             if (duplicateIds.isEmpty()) {
                 showToast(getString(R.string.no_duplicates));
@@ -319,7 +370,7 @@ public class Deduplication extends Activity implements View.OnClickListener {
         findDuplicates.execute();
     }
 
-    private void showConfirmation(ArrayList<String> duplicateIds) {
+    private void showConfirmation(List<String> duplicateIds) {
         mTotalMessages = duplicateIds.size();
         mFormat = getResources().getQuantityString(R.plurals.deleted_messages, mTotalMessages);
 
@@ -340,7 +391,7 @@ public class Deduplication extends Activity implements View.OnClickListener {
         confirmationDialog.show();
     }
 
-    private void startDeleteService(ArrayList<String> duplicateIds) {
+    private void startDeleteService(List<String> duplicateIds) {
         mProgressBar.setMax(mTotalMessages);
 
         int deleteBy = getPerBatch();
@@ -426,6 +477,19 @@ public class Deduplication extends Activity implements View.OnClickListener {
             case R.id.ignore_timestamp:
                 showHideWarning();
                 break;
+
+            case R.id.ignore_space:
+                mIgnoreSpace.setChecked(!mIgnoreSpace.isChecked());
+                break;
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mDialog != null) {
+            mDialog.dismiss();
+            mDialog = null;
         }
     }
 }

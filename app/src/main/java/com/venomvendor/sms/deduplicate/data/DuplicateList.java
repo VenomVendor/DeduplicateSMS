@@ -11,7 +11,7 @@ public class DuplicateList<T> extends ArrayList<T> {
     }
 
     public List<T> splice(int fromIndex, int toIndex) {
-        DuplicateList<T> splicedList = new DuplicateList<>(subList(fromIndex, toIndex));
+        List<T> splicedList = new DuplicateList<>(subList(fromIndex, toIndex));
         removeRange(fromIndex, splicedList.size());
         return splicedList;
     }

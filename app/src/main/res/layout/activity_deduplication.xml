@@ -13,16 +13,63 @@
         android:orientation="vertical"
         android:padding="@dimen/activity_margin">
 
-        <ProgressBar
-            style="?android:attr/progressBarStyleHorizontal"
+        <EditText
+            android:id="@+id/per_iteration"
             android:layout_width="match_parent"
-            android:layout_height="10dp"
-            android:indeterminate="true" />
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/activity_margin"
+            android:layout_marginLeft="@dimen/activity_margin"
+            android:layout_marginTop="@dimen/tiny_margin"
+            android:layout_marginEnd="@dimen/activity_margin"
+            android:layout_marginRight="@dimen/activity_margin"
+            android:hint="@string/delete_by"
+            android:inputType="number"
+            android:maxLength="2" />
+
+        <Spinner
+            android:id="@+id/country_selector"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="@dimen/activity_margin"
+            android:padding="0dp" />
+
+        <CheckedTextView
+            android:id="@+id/ignore_timestamp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/activity_margin"
+            android:checkMark="@null"
+            android:drawableStart="?android:attr/listChoiceIndicatorMultiple"
+            android:drawableLeft="?android:attr/listChoiceIndicatorMultiple"
+            android:drawableEnd="@null"
+            android:drawableRight="@null"
+            android:gravity="center_vertical"
+            android:text="@string/ignore_timestamp"
+            android:textColor="@android:color/black" />
+
+        <CheckedTextView
+            android:id="@+id/ignore_space"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/activity_margin"
+            android:layout_marginLeft="@dimen/activity_margin"
+            android:layout_marginEnd="@dimen/activity_margin"
+            android:layout_marginRight="@dimen/activity_margin"
+            android:checkMark="@null"
+            android:drawableStart="?android:attr/listChoiceIndicatorMultiple"
+            android:drawableLeft="?android:attr/listChoiceIndicatorMultiple"
+            android:drawableEnd="@null"
+            android:drawableRight="@null"
+            android:gravity="center_vertical"
+            android:text="@string/ignore_space"
+            android:textColor="@android:color/black" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginTop="@dimen/activity_margin"
             android:orientation="horizontal">
 
             <Button
@@ -49,29 +96,6 @@
                 android:textAllCaps="false" />
         </LinearLayout>
 
-        <EditText
-            android:id="@+id/per_iteration"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/activity_margin"
-            android:hint="@string/delete_by"
-            android:inputType="number"
-            android:maxLength="2" />
-
-        <CheckedTextView
-            android:id="@+id/ignore_timestamp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/tiny_margin"
-            android:checkMark="@null"
-            android:drawableEnd="@null"
-            android:drawableLeft="?android:attr/listChoiceIndicatorMultiple"
-            android:drawableRight="@null"
-            android:drawableStart="?android:attr/listChoiceIndicatorMultiple"
-            android:gravity="center_vertical"
-            android:text="@string/ignore_timestamp"
-            android:textColor="@android:color/black" />
-
         <LinearLayout
             android:id="@+id/ignore_timestamp_message"
             android:layout_width="match_parent"
@@ -84,8 +108,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/tiny_margin"
                 android:background="@android:color/black"
-                android:drawableLeft="@android:drawable/stat_sys_warning"
                 android:drawableStart="@android:drawable/stat_sys_warning"
+                android:drawableLeft="@android:drawable/stat_sys_warning"
                 android:padding="@dimen/tiny_margin"
                 android:text="@string/warning"
                 android:textAppearance="?android:attr/textAppearanceLarge"
@@ -115,8 +139,8 @@
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/min_padding"
                     android:layout_marginStart="@dimen/min_padding"
+                    android:layout_marginLeft="@dimen/min_padding"
                     android:text="@string/keep_last" />
             </RadioGroup>
         </LinearLayout>
@@ -187,7 +211,8 @@
                 android:padding="@dimen/min_padding"
                 android:text="@string/security_reasons"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@android:color/secondary_text_light" />
+                android:textColor="@android:color/secondary_text_light"
+                android:textSize="@dimen/note_size" />
 
             <Button
                 android:id="@+id/revert"
