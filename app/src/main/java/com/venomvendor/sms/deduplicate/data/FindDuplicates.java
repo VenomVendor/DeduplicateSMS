@@ -21,32 +21,44 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.database.Cursor;
 import android.os.AsyncTask;
+import android.util.Log;
 
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
 import com.venomvendor.sms.deduplicate.BuildConfig;
 import com.venomvendor.sms.deduplicate.R;
 import com.venomvendor.sms.deduplicate.util.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /*
  * Created by VenomVendor on 11/8/15.
  */
-public class FindDuplicates extends AsyncTask<Void, Integer, Boolean> {
+public final class FindDuplicates extends AsyncTask<Void, Integer, Boolean> {
 
+    private static final String TAG = "FindDuplicates";
     private final ArrayList<String> mDuplicateIds = new ArrayList<>();
 
     @SuppressLint("StaticFieldLeak")
     private final Activity mActivity;
-    private final boolean mChecked;
+    private final boolean mIgnoreTimestamp;
+    private final boolean mIgnoreSpace;
     private final boolean mKeepFirst;
+    private final String mCountry;
     private ProgressDialog mProgressDialog;
     private OnDuplicatesFoundListener mListener;
+    private PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
 
-    public FindDuplicates(Activity activity, boolean checked, boolean keepFirst) {
+    public FindDuplicates(Activity activity, boolean ignoreTimestamp, boolean ignoreSpace,
+                          boolean keepFirst, String country) {
         this.mActivity = activity;
-        this.mChecked = checked;
+        this.mIgnoreTimestamp = ignoreTimestamp;
+        this.mIgnoreSpace = ignoreSpace;
         this.mKeepFirst = keepFirst;
+        this.mCountry = country;
     }
 
     public void setOnDuplicatesFoundListener(OnDuplicatesFoundListener listener) {
@@ -72,7 +84,9 @@ public class FindDuplicates extends AsyncTask<Void, Integer, Boolean> {
 
     @Override
     protected Boolean doInBackground(Void... params) {
-        String sortOrder = mChecked ? Constants.DATE + (mKeepFirst ? " ASC" : " DESC") : null;
+        String sortOrder = mIgnoreTimestamp ?
+                Constants.DATE + (mKeepFirst ? " ASC" : " DESC") :
+                null;
         String[] projection = new String[] {
                 Constants._ID,
                 Constants.ADDRESS,
@@ -119,14 +133,32 @@ public class FindDuplicates extends AsyncTask<Void, Integer, Boolean> {
             _id = String.valueOf(__id);
         }
 
-        final List<String> uniqueData = new ArrayList<>();
+        String message = cursor.getString(cursor.getColumnIndex(Constants.BODY))
+                .toLowerCase(Locale.getDefault())
+                .trim();
 
-        uniqueData.add(cursor.getString(cursor.getColumnIndex(Constants.ADDRESS)));
-        uniqueData.add(cursor.getString(cursor.getColumnIndex(Constants.BODY)));
-        if (!mChecked) {
-            uniqueData.add(cursor.getString(cursor.getColumnIndex(Constants.DATE)));
+        if (mIgnoreSpace) {
+            message = message.replaceAll("\\s|\\n|\\t|\\r", "");
         }
-        int hashCode = uniqueData.hashCode();
+        StringBuilder uniqueData = new StringBuilder(message);
+
+        String phone = cursor.getString(cursor.getColumnIndex(Constants.ADDRESS));
+        String formattedNumber = getFormattedNumber(phone);
+        if (!formattedNumber.startsWith("+")) {
+            formattedNumber = reFormatPhone(formattedNumber);
+        }
+
+        formattedNumber = formattedNumber.replaceAll("\\s|\\n|\\t|\\r", "");
+
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, formattedNumber + " => " + message);
+        }
+
+        uniqueData.append(formattedNumber);
+        if (!mIgnoreTimestamp) {
+            uniqueData.append(cursor.getString(cursor.getColumnIndex(Constants.DATE)));
+        }
+        int hashCode = uniqueData.toString().trim().hashCode();
 
         if (hashCodeCache.contains(hashCode)) {
             mDuplicateIds.add(_id);
@@ -134,6 +166,27 @@ public class FindDuplicates extends AsyncTask<Void, Integer, Boolean> {
             hashCodeCache.add(hashCode);
         }
         publishProgress(currentIndex);
+    }
+
+    private String reFormatPhone(String formattedNumber) {
+        String filteredNum = formattedNumber.replaceAll("^0+", "");
+        return getFormattedNumber(filteredNum);
+    }
+
+    private String getFormattedNumber(String phone) {
+        if (phone == null || phone.equals("")) {
+            return "";
+        }
+        try {
+            Phonenumber.PhoneNumber number = phoneUtil.parseAndKeepRawInput(phone, mCountry);
+            boolean isNumberValid = phoneUtil.isValidNumber(number);
+            if (isNumberValid) {
+                return phoneUtil.format(number, PhoneNumberUtil.PhoneNumberFormat.INTERNATIONAL);
+            }
+        } catch (NumberParseException ignore) {
+            // Do Nothing.
+        }
+        return phone;
     }
 
     @Override
@@ -157,6 +210,6 @@ public class FindDuplicates extends AsyncTask<Void, Integer, Boolean> {
 
     public interface OnDuplicatesFoundListener {
 
-        void duplicatesFound(ArrayList<String> duplicateIds);
+        void duplicatesFound(List<String> duplicateIds);
     }
 }

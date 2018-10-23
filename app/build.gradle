@@ -1,20 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion '26.0.0'
+    compileSdkVersion 28
+    buildToolsVersion '28.0.3'
 
     defaultConfig {
         applicationId 'com.venomvendor.sms.deduplicate'
-        minSdkVersion 8
-        targetSdkVersion 26
-        versionCode rootProject.ext.versionCode
-        versionName rootProject.ext.versionName
-        if (rootProject.ext.enableJack) {
-            jackOptions {
-                enabled false
-            }
-        }
+        targetSdkVersion 28
+        versionName '0.0.0'
+        versionCode 1
     }
 
     flavorDimensions 'buildType'
@@ -22,14 +16,12 @@ android {
         froyo {
             dimension 'buildType'
             minSdkVersion 8
-            versionCode rootProject.ext.froyo
         }
         donut {
             dimension 'buildType'
             minSdkVersion 4
             maxSdkVersion 7
             targetSdkVersion 7
-            versionCode rootProject.ext.donut
         }
     }
 
@@ -61,7 +53,7 @@ android {
             versionNameSuffix rootProject.ext.RELEASE_SUFFIX
             proguardFiles './pro-guard/proguard-optimize.pro',
                     './pro-guard/proguard-rules-aggressive.pro',
-                    './pro-guard/proguard-rules-consumer.pro',
+                    './pro-guard/proguard-rules-app.pro',
                     './pro-guard/proguard-rules-log.pro'
         }
         debug {
@@ -92,7 +84,23 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility 1.8
-        targetCompatibility 1.8
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    applicationVariants.all { variant ->
+        if (variant.buildType.name == 'release') {
+            productFlavors.each { flavor ->
+                def name = flavor.name
+                variant.outputs.each { output ->
+                    output.versionNameOverride = rootProject.ext.versionName
+                    output.versionCodeOverride = name == 'froyo' ? rootProject.ext.froyo : rootProject.ext.donut
+                }
+            }
+        }
+    }
+}
+
+dependencies {
+    implementation 'com.googlecode.libphonenumber:libphonenumber:8.9.15'
 }

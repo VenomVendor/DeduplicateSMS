@@ -5,13 +5,13 @@
     <string name="cancelling">Cancelling…</string>
     <string name="more_apps">More Apps</string>
     <string name="deduplicate">Deduplicate</string>
-    <string name="reading_msg">Reading Messages.</string>
+    <string name="reading_msg">Reading Messages</string>
     <string name="warning_message">This app is not responsible if any data is lost, kindly take a
         backup before proceeding.
     </string>
-    <string name="revert">Revert to previous SMS app.</string>
+    <string name="revert">Revert to previous messaging app</string>
     <string name="security_reasons">
-        <![CDATA[For security reasons only ONE app can read & write SMS for mobile running on Android-KitKat and above.\nAfter deleting the duplicates revert back to default/previous SMS app. Find more at http://android-developers.blogspot.com/2013/10/getting-your-sms-apps-ready-for-kitkat.html]]></string>
+        <![CDATA[For security reasons only ONE app can read & write SMS for mobile running on Android-KitKat and above.\nAfter deleting the duplicates revert back to default/previous SMS app. Find more at https://android-developers.blogspot.com/2013/10/getting-your-sms-apps-ready-for-kitkat.html]]></string>
     <string name="required_permissions">Required Permission</string>
     <string name="permission_explain">
         <![CDATA[%s requires access to \"READ_SMS & WRITE_SMS\" to delete duplicate messages.]]></string>
@@ -24,6 +24,7 @@
     <string name="app_cannot_run">Without READ_SMS permission, app cannot run.\n</string>
     <string name="app_will_exit">" App will exit on press of "</string>
     <string name="ignore_timestamp">Ignore timestamp?</string>
+    <string name="ignore_space">Ignore space?</string>
     <string name="warning">Warning!</string>
     <string name="warning_desc">This will delete similar messages from the SAME sender irrespective
         of any date.

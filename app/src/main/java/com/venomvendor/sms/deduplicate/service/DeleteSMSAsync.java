@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import com.venomvendor.sms.deduplicate.data.DuplicateList;
 import com.venomvendor.sms.deduplicate.util.Constants;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -19,7 +18,7 @@ public class DeleteSMSAsync extends AsyncTask<Void, Integer, Integer> {
     private ContentResolver contentResolver;
     private boolean mCancel;
 
-    public DeleteSMSAsync(Context context, ArrayList<String> duplicateIds,
+    public DeleteSMSAsync(Context context, List<String> duplicateIds,
                           int deleteBy, OnDeletedListener onDeletedListener) {
         contentResolver = context.getContentResolver();
         mDuplicateIds = new DuplicateList<>(duplicateIds);
