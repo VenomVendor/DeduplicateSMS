@@ -102,5 +102,5 @@ android {
 }
 
 dependencies {
-    implementation 'com.googlecode.libphonenumber:libphonenumber:8.9.15'
+    implementation 'com.googlecode.libphonenumber:libphonenumber:8.10.10'
 }
