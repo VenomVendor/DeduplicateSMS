@@ -1,5 +1,11 @@
 apply plugin: 'com.android.application'
 
+def credProps = new Properties()
+def credFile = file("$rootProject.rootDir/local.properties")
+if (credFile.exists()) {
+    credFile.withInputStream { credProps.load it }
+}
+
 android {
     compileSdkVersion 28
     buildToolsVersion '28.0.3'
@@ -29,14 +35,14 @@ android {
         release {
             try {
                 storeFile file(rootProject.ext.KEY_LOCATION)
-                keyAlias KEY_ALIAS
-                keyPassword KEY_PASSWORD
-                storePassword KEYSTORE_PASSWORD
+                keyAlias credProps.KEY_ALIAS
+                keyPassword credProps.KEY_PASSWORD
+                storePassword credProps.KEYSTORE_PASSWORD
             }
             catch (ex) {
                 //noinspection GrUnresolvedAccess
                 throw new InvalidUserDataException("You should define KEY_ALIAS, KEY_PASSWORD & " +
-                        "KEYSTORE_PASSWORD in gradle.properties. \n ${ex.getLocalizedMessage()}")
+                        "KEYSTORE_PASSWORD in local.properties. \n ${ex.getLocalizedMessage()}")
             }
         }
     }
@@ -63,7 +69,6 @@ android {
             pseudoLocalesEnabled rootProject.ext.DEBUG
             shrinkResources !rootProject.ext.DEBUG
             minifyEnabled !rootProject.ext.DEBUG
-            signingConfig signingConfigs.release
             versionNameSuffix rootProject.ext.DEBUG_SUFFIX
         }
     }
@@ -102,5 +107,5 @@ android {
 }
 
 dependencies {
-    implementation 'com.googlecode.libphonenumber:libphonenumber:8.9.15'
+    implementation 'com.googlecode.libphonenumber:libphonenumber:8.10.10'
 }

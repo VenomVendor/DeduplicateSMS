@@ -5,7 +5,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.1'
+        classpath 'com.android.tools.build:gradle:3.4.0'
     }
 }
 
@@ -23,7 +23,7 @@ task clean(type: Delete) {
 ext {
     DEBUG = true
     MAJOR = 2
-    MINOR = 1
+    MINOR = 2
     PATCH = 0
 
     // "alpha/beta/debug" TODO-Always check during release.
