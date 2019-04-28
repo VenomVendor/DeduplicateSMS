@@ -4,8 +4,7 @@
 .DS_Store
 /build
 /captures
-/gradle.properties
-/key.keystore
+*.keystore
 
 ### Android template
 # Built application files
