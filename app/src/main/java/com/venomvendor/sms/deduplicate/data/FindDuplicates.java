@@ -105,12 +105,9 @@ public final class FindDuplicates extends AsyncTask<Void, Integer, Boolean> {
             try {
                 mDuplicateIds.clear();
                 int currentIndex = 0;
-                while (cursor.moveToNext() && getMax()) {
-                    currentIndex++;
-                    collectDuplicates(cursor, hashCodeCache, currentIndex);
+                while (cursor.moveToNext()) {
+                    collectDuplicates(cursor, hashCodeCache, ++currentIndex);
                 }
-            } catch (Exception ignore) {
-                return false;
             } finally {
                 hashCodeCache.clear();
                 cursor.close();
@@ -118,10 +115,6 @@ public final class FindDuplicates extends AsyncTask<Void, Integer, Boolean> {
             return true;
         }
         return null;
-    }
-
-    private boolean getMax() {
-        return !BuildConfig.DEBUG || mDuplicateIds.size() < 20;
     }
 
     private void collectDuplicates(Cursor cursor, List<Integer> hashCodeCache, int currentIndex) {
@@ -133,18 +126,22 @@ public final class FindDuplicates extends AsyncTask<Void, Integer, Boolean> {
             _id = String.valueOf(__id);
         }
 
-        String message = cursor.getString(cursor.getColumnIndex(Constants.BODY))
-                .toLowerCase(Locale.getDefault())
-                .trim();
+        String message = cursor.getString(cursor.getColumnIndex(Constants.BODY));
+        if (message == null) {
+            message = "";
+        } else {
+            message = message.toLowerCase(Locale.getDefault()).trim();
+        }
 
         if (mIgnoreSpace) {
             message = message.replaceAll("\\s|\\n|\\t|\\r", "");
         }
+
         StringBuilder uniqueData = new StringBuilder(message);
 
         String phone = cursor.getString(cursor.getColumnIndex(Constants.ADDRESS));
         String formattedNumber = getFormattedNumber(phone);
-        if (!formattedNumber.startsWith("+")) {
+        if (formattedNumber.length() != 0 && !formattedNumber.startsWith("+")) {
             formattedNumber = reFormatPhone(formattedNumber);
         }
 

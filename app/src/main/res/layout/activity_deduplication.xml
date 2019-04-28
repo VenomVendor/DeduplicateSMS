@@ -23,6 +23,7 @@
             android:layout_marginEnd="@dimen/activity_margin"
             android:layout_marginRight="@dimen/activity_margin"
             android:hint="@string/delete_by"
+            android:importantForAutofill="no"
             android:inputType="number"
             android:maxLength="2" />
 
