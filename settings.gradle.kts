@@ -14,3 +14,4 @@ fun configureModule(name: String, dir: String? = null) {
 }
 
 configureModule("app", "deduplicate-app")
+configureModule("core", "deduplicate-core")
