@@ -6,8 +6,8 @@ object Versions {
     const val KOTLIN = "1.3.61"
 
     // Semantic Version
-    const val MAJOR = 2
-    const val MINOR = 2
+    const val MAJOR = 3
+    const val MINOR = 0
     const val PATCH = 0
 
     // Phone number parser

@@ -17,7 +17,7 @@ object Config {
     const val CREDENTIALS = "local.properties"
 
     // "alpha/beta/debug" TODO-Always check during release.
-    const val RELEASE_SUFFIX = ""
+    const val RELEASE_SUFFIX = "-beta"
     const val DEBUG_SUFFIX = "$RELEASE_SUFFIX-debug"
 
     // For Users.
