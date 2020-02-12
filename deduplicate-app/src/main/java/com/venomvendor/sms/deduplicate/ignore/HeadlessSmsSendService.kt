@@ -13,20 +13,17 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
+package com.venomvendor.sms.deduplicate.ignore
 
-package com.venomvendor.sms.deduplicate.ignore;
-
-import android.app.Service;
-import android.content.Intent;
-import android.os.IBinder;
+import android.app.Service
+import android.content.Intent
+import android.os.IBinder
 
 /*
  * Created by VenomVendor on 11/8/15.
  */
-public class HeadlessSmsSendService extends Service {
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
+class HeadlessSmsSendService : Service() {
+    override fun onBind(intent: Intent): IBinder? {
+        return null
     }
 }

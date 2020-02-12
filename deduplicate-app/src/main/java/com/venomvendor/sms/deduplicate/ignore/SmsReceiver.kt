@@ -13,20 +13,15 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
+package com.venomvendor.sms.deduplicate.ignore
 
-package com.venomvendor.sms.deduplicate.ignore;
-
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
 
 /*
  * Created by VenomVendor on 11/8/15.
  */
-public class SmsReceiver extends BroadcastReceiver {
-
-    @Override
-    public void onReceive(Context context, Intent intent) {
-
-    }
+class SmsReceiver : BroadcastReceiver() {
+    override fun onReceive(context: Context, intent: Intent) {}
 }
