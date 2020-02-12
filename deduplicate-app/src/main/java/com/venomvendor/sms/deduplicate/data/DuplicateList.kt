@@ -1,18 +1,12 @@
-package com.venomvendor.sms.deduplicate.data;
+package com.venomvendor.sms.deduplicate.data
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.ArrayList
 
-public class DuplicateList<T> extends ArrayList<T> {
+class DuplicateList<T>(collection: Collection<T>) : ArrayList<T>(collection) {
 
-    public DuplicateList(Collection<? extends T> collection) {
-        super(collection);
-    }
-
-    public List<T> splice(int fromIndex, int toIndex) {
-        List<T> splicedList = new DuplicateList<>(subList(fromIndex, toIndex));
-        removeRange(fromIndex, splicedList.size());
-        return splicedList;
+    fun splice(fromIndex: Int, toIndex: Int): List<T> {
+        val splicedList: List<T> = DuplicateList(subList(fromIndex, toIndex))
+        removeRange(fromIndex, splicedList.size)
+        return splicedList
     }
 }

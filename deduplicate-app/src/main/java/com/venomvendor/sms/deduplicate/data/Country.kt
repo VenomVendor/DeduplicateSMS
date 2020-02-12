@@ -13,51 +13,25 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
+package com.venomvendor.sms.deduplicate.data
 
-package com.venomvendor.sms.deduplicate.data;
+class Country(val countryCode: String, private val displayName: String) : Comparable<Country> {
 
-public final class Country implements Comparable<Country> {
-
-    private final String countryCode;
-    private final String displayName;
-
-    public Country(String countryCode, String displayName) {
-        this.countryCode = countryCode;
-        this.displayName = displayName;
+    override fun compareTo(other: Country): Int {
+        return displayName.compareTo(other.displayName)
     }
 
-    public String getCountryCode() {
-        return countryCode;
-    }
-
-    @Override
-    public int compareTo(Country another) {
-        return displayName.compareTo(another.displayName);
-    }
-
-    @Override
-    public boolean equals(Object another) {
-        if (this == another) {
-            return true;
+    override fun equals(other: Any?): Boolean {
+        if (this === other) {
+            return true
         }
-        if (!(another instanceof Country)) {
-            return false;
+        if (other !is Country) {
+            return false
         }
-
-        Country country = (Country) another;
-
-        return countryCode != null ?
-                countryCode.equals(country.countryCode) :
-                country.countryCode == null;
+        return countryCode == other.countryCode
     }
 
-    @Override
-    public int hashCode() {
-        return countryCode != null ? countryCode.hashCode() : 0;
-    }
+    override fun hashCode() = countryCode.hashCode()
 
-    @Override
-    public String toString() {
-        return displayName + " | " + countryCode;
-    }
+    override fun toString() = "$displayName | $countryCode"
 }
