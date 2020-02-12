@@ -1,6 +1,5 @@
-package com.venomvendor.sms.deduplicate.service;
+package com.venomvendor.sms.deduplicate.service
 
-public interface OnDeletedListener {
-
-    void onResponse(int deletedMsgs, boolean interrupted);
+interface OnDeletedListener {
+    fun onResponse(deletedMessages: Int, interrupted: Boolean)
 }
