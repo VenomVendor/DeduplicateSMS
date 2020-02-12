@@ -448,7 +448,7 @@ class Deduplication : Activity(), View.OnClickListener {
     override fun onActivityResult(
         requestCode: Int,
         resultCode: Int,
-        data: Intent
+        data: Intent?
     ) {
         if (requestCode == APP_CHANGE_REQUEST) {
             if (resultCode == RESULT_OK || isValidMessageApp(this)) {
