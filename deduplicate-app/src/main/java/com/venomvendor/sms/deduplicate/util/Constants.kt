@@ -13,27 +13,22 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
+package com.venomvendor.sms.deduplicate.util
 
-package com.venomvendor.sms.deduplicate.util;
-
-import android.net.Uri;
+import android.net.Uri
 
 /*
  * Created by VenomVendor on 11/8/15.
  */
-public final class Constants {
-
-    public static final String CURRENT_SMS_APP = "currentSmsApp";
-    public static final String SHOW_EULA = "eula";
-    public static final Uri CONTENT_URI = Uri.parse("content://sms");
-    public static final String _ID = "_id";
-    public static final String ADDRESS = "address";
-    public static final String DATE = "date";
-    public static final String DATE_SENT = "date_sent";
-    public static final String TYPE = "type";
-
-    public static final String BODY = "body";
-
-    private Constants() {
-    }
+object Constants {
+    const val CURRENT_SMS_APP = "currentSmsApp"
+    const val SHOW_EULA = "eula"
+    @JvmField
+    val CONTENT_URI: Uri = Uri.parse("content://sms")
+    const val _ID = "_id"
+    const val ADDRESS = "address"
+    const val DATE = "date"
+    const val DATE_SENT = "date_sent"
+    const val TYPE = "type"
+    const val BODY = "body"
 }
