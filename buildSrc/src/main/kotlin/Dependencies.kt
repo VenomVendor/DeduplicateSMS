@@ -18,7 +18,7 @@ import org.gradle.api.artifacts.dsl.RepositoryHandler
 
 object Versions {
     // Build
-    const val GRADLE_BUILD_TOOL = "4.0.0-alpha09"
+    const val GRADLE_BUILD_TOOL = "4.1.0-alpha01"
     const val KOTLIN = "1.3.61"
 
     // Semantic Version

@@ -110,9 +110,9 @@ android {
         }
 
         applicationVariants.all {
-            if (buildType.name == RELEASE) {
+            if (buildType.getName() == RELEASE) {
                 productFlavors.forEach { flavor ->
-                    val name = flavor.name
+                    val name = flavor.getName()
                     outputs.forEach { output ->
                         (output as ApkVariantOutputImpl).versionNameOverride = VERSION_NAME
                         output.versionCodeOverride =
