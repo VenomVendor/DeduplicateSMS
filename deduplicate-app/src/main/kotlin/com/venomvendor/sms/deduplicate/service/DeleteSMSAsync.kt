@@ -19,7 +19,7 @@ package com.venomvendor.sms.deduplicate.service
 import android.content.ContentResolver
 import android.content.Context
 import android.os.AsyncTask
-import com.venomvendor.sms.deduplicate.data.DuplicateList
+import com.venomvendor.sms.deduplicate.core.util.Splicer
 import com.venomvendor.sms.deduplicate.util.Constants
 import java.util.Collections
 
@@ -30,7 +30,7 @@ class DeleteSMSAsync(
     onDeletedListener: OnDeletedListener
 ) : AsyncTask<Void?, Int?, Int>() {
     private val mDeleteBy: Int = deleteBy
-    private val mDuplicateIds: DuplicateList<String> = DuplicateList(duplicateIds)
+    private val mDuplicateIds: Splicer<String> = Splicer(duplicateIds)
     private val mOnDeletedListener: OnDeletedListener = onDeletedListener
     private val contentResolver: ContentResolver = context.contentResolver
     private var mCancel = false

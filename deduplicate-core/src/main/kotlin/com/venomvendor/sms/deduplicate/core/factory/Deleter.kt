@@ -14,15 +14,29 @@
  *   limitations under the License.
  */
 
-package com.venomvendor.sms.deduplicate.data
+package com.venomvendor.sms.deduplicate.core.factory
 
-import java.util.ArrayList
+import android.net.Uri
 
-class DuplicateList<T>(collection: Collection<T>) : ArrayList<T>(collection) {
+/**
+ * Deletes messages from the table
+ */
+interface Deleter {
 
-    fun splice(fromIndex: Int, toIndex: Int): List<T> {
-        val splicedList: List<T> = DuplicateList(subList(fromIndex, toIndex))
-        removeRange(fromIndex, splicedList.size)
-        return splicedList
-    }
+    /**
+     * Unique key in the table
+     */
+    val primaryKey: String
+
+    /**
+     * Content Uri of the table
+     */
+    val uri: Uri
+
+    /**
+     * Deleted given items in batch
+     * @param duplicateIds items to be deleted
+     * @param deleteBy number of items to be deleted at once
+     */
+    suspend fun delete(duplicateIds: Collection<String>, deleteBy: Int): Int
 }
