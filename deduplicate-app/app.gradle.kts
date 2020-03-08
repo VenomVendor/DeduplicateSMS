@@ -40,14 +40,14 @@ android {
     flavorDimensions("buildType")
     productFlavors {
         create(FROYO) {
-            minSdkVersion(8)
+            minSdkVersion(21)
         }
-
-        create(DONUT) {
-            minSdkVersion(4)
-            maxSdkVersion(7)
-            targetSdkVersion(7)
-        }
+        //
+        // create(DONUT) {
+        //     minSdkVersion(4)
+        //     maxSdkVersion(7)
+        //     targetSdkVersion(7)
+        // }
     }
 
     signingConfigs {

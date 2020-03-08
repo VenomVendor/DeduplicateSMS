@@ -1,5 +1,4 @@
 import Constants.DEBUG
-import Constants.DONUT
 import Constants.FROYO
 import Constants.RELEASE
 
@@ -33,14 +32,14 @@ android {
     flavorDimensions("buildType")
     productFlavors {
         create(FROYO) {
-            minSdkVersion(8)
+            minSdkVersion(21)
         }
-
-        create(DONUT) {
-            minSdkVersion(4)
-            maxSdkVersion(7)
-            targetSdkVersion(7)
-        }
+        //
+        // create(DONUT) {
+        //     minSdkVersion(4)
+        //     maxSdkVersion(7)
+        //     targetSdkVersion(7)
+        // }
     }
 
     buildTypes {
@@ -91,9 +90,16 @@ android {
     }
 }
 
+// Required dependencies
 dependencies {
-    kotlin(Constants.KOTLIN_JDK, version = Versions.KOTLIN)
+    api(embeddedKotlin(Constants.KOTLIN_JDK))
 
+    api(Dependencies.App.COROUTINES)
+    api(Dependencies.App.KOIN)
+}
+
+// Test Dependencies
+dependencies {
     testImplementation(Dependencies.Test.J_UNIT)
 }
 
