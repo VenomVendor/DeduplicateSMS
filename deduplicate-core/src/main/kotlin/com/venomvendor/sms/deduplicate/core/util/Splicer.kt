@@ -26,7 +26,7 @@ class Splicer<T>(collection: Collection<T>) : ArrayList<T>(collection) {
     /**
      * Splice items from collection.
      * Sublist current collection from given [fromIndex] inclusive, to [toIndex] exclusive.
-     * This also deletes the sublisted items from current collection.
+     * This also deletes the sublist items from current collection.
      */
     fun splice(fromIndex: Int, toIndex: Int): List<T> {
         // Create a new copy

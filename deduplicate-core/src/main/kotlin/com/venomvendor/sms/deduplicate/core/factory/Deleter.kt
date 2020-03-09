@@ -16,7 +16,7 @@
 
 package com.venomvendor.sms.deduplicate.core.factory
 
-import android.net.Uri
+import com.venomvendor.sms.deduplicate.core.di.MessagingType
 
 /**
  * Deletes messages from the table
@@ -31,7 +31,7 @@ interface Deleter {
     /**
      * Content Uri of the table
      */
-    val uri: Uri
+    val messagingType: MessagingType
 
     /**
      * Deleted given items in batch

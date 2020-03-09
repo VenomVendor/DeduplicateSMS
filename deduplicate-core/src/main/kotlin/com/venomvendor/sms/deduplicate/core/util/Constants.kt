@@ -14,18 +14,13 @@
  *   limitations under the License.
  */
 
-package com.venomvendor.sms.deduplicate.core.internal
+package com.venomvendor.sms.deduplicate.core.util
 
-import com.venomvendor.sms.deduplicate.core.di.MessagingType
-import com.venomvendor.sms.deduplicate.core.factory.Deleter
-
-class MmsDeleter : Deleter {
-    override val primaryKey: String
-        get() = TODO("Not yet implemented")
-    override val messagingType: MessagingType
-        get() = TODO("Not yet implemented")
-
-    override suspend fun delete(duplicateIds: Collection<String>, deleteBy: Int): Int {
-        TODO("Not yet implemented")
-    }
+object Constants {
+    const val _ID = "_id"
+    const val ADDRESS = "address"
+    const val DATE = "date"
+    const val DATE_SENT = "date_sent"
+    const val TYPE = "type"
+    const val BODY = "body"
 }

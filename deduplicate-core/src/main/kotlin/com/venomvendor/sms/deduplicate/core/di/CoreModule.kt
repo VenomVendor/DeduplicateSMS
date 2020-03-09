@@ -26,9 +26,9 @@ import org.koin.dsl.module
 /**
  * Types of offline messages
  */
-enum class MessagingTypes {
-    SMS,
-    MMS
+enum class MessagingType(val uri: String) {
+    SMS("sms"),
+    MMS("mms")
 }
 
 /**
@@ -43,14 +43,14 @@ val coreModule = module {
     /**
      * For SMS Deletion
      */
-    factory<Deleter>(named(MessagingTypes.SMS)) {
+    factory<Deleter>(named(MessagingType.SMS)) {
         SmsDeleter()
     }
 
     /**
      * For MMS Deletion
      */
-    factory<Deleter>(named(MessagingTypes.MMS)) {
+    factory<Deleter>(named(MessagingType.MMS)) {
         MmsDeleter()
     }
 }

@@ -14,18 +14,22 @@
  *   limitations under the License.
  */
 
-package com.venomvendor.sms.deduplicate.core.internal
+@file:Suppress("EXPERIMENTAL_FEATURE_WARNING")
 
-import com.venomvendor.sms.deduplicate.core.di.MessagingType
-import com.venomvendor.sms.deduplicate.core.factory.Deleter
+package com.venomvendor.sms.deduplicate.core.factory
 
-class MmsDeleter : Deleter {
-    override val primaryKey: String
-        get() = TODO("Not yet implemented")
-    override val messagingType: MessagingType
-        get() = TODO("Not yet implemented")
+/**
+ * Responsible for deletion
+ */
+interface DeletionManager {
 
-    override suspend fun delete(duplicateIds: Collection<String>, deleteBy: Int): Int {
-        TODO("Not yet implemented")
-    }
+    /**
+     * Deletes [clause] in given table
+     */
+    fun delete(clause: WhereClause): Int
 }
+
+/**
+ * Inline class for sql query
+ */
+inline class WhereClause(val query: String)

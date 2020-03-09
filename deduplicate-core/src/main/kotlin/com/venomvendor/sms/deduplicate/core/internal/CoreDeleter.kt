@@ -16,23 +16,24 @@
 
 package com.venomvendor.sms.deduplicate.core.internal
 
-import android.content.ContentResolver
 import com.venomvendor.sms.deduplicate.core.factory.Deleter
+import com.venomvendor.sms.deduplicate.core.factory.DeletionManager
+import com.venomvendor.sms.deduplicate.core.factory.WhereClause
 import com.venomvendor.sms.deduplicate.core.util.Splicer
 
 /**
- * Deletes bulk items from [ContentResolver]
+ * Deletes bulk items via [DeletionManager]
  */
 abstract class CoreDeleter : Deleter {
 
     /**
-     * Deletes [splicerIds] from [contentResolver] in [uri]
+     * Deletes [splicerIds] from [deletionManager] in [messagingType]
      * @param splicerIds items to be deleted
      * @param currentDeletedCount count of deleted items
      * @param deleteBy number of items to be deleted at once
      */
     fun deleteMessages(
-        contentResolver: ContentResolver,
+        deletionManager: DeletionManager,
         splicerIds: Splicer<String>,
         currentDeletedCount: Int = 0,
         deleteBy: Int = 50
@@ -47,14 +48,14 @@ abstract class CoreDeleter : Deleter {
         val tempIds = splicerIds.splice(0, toIndex).joinToString(",")
 
         // Create query
-        val whereClause = "$primaryKey in ($tempIds)"
+        val whereClause = WhereClause("$primaryKey in ($tempIds)")
 
         // Updated deleted count
         val deletedMessages = currentDeletedCount.plus(
-            contentResolver.delete(uri, whereClause, null)
+            deletionManager.delete(whereClause)
         )
 
         // Loop it.
-        return deleteMessages(contentResolver, splicerIds, deletedMessages, deleteBy)
+        return deleteMessages(deletionManager, splicerIds, deletedMessages, deleteBy)
     }
 }
