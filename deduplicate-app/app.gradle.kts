@@ -1,6 +1,5 @@
 import Config.VERSION_NAME
 import Constants.DEBUG
-import Constants.DONUT
 import Constants.FROYO
 import Constants.RELEASE
 import com.android.build.gradle.internal.api.ApkVariantOutputImpl
@@ -9,8 +8,6 @@ import org.jetbrains.kotlin.konan.properties.loadProperties
 
 plugins {
     id("com.android.application")
-    kotlin("android")
-    kotlin("android.extensions")
 }
 
 val credProps = File("${rootProject.rootDir}/${Config.CREDENTIALS}").loadProperties()
@@ -127,9 +124,7 @@ android {
 dependencies {
     implementation(project(":core"))
 
-    kotlin(Constants.KOTLIN_JDK, version = Versions.KOTLIN)
-
     implementation(Dependencies.App.PHONE_NUMBER_PARSER)
 }
 
-apply(from = rootProject.file("./gradle/formatter.gradle.kts"))
+apply(from = rootProject.file("./gradle/root.gradle.kts"))

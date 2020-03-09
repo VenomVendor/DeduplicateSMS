@@ -4,8 +4,6 @@ import Constants.RELEASE
 
 plugins {
     id("com.android.library")
-    kotlin("android")
-    kotlin("android.extensions")
 }
 
 android {
@@ -90,17 +88,4 @@ android {
     }
 }
 
-// Required dependencies
-dependencies {
-    api(embeddedKotlin(Constants.KOTLIN_JDK))
-
-    api(Dependencies.App.COROUTINES)
-    api(Dependencies.App.KOIN)
-}
-
-// Test Dependencies
-dependencies {
-    testImplementation(Dependencies.Test.J_UNIT)
-}
-
-apply(from = rootProject.file("./gradle/formatter.gradle.kts"))
+apply(from = rootProject.file("./gradle/root.gradle.kts"))
