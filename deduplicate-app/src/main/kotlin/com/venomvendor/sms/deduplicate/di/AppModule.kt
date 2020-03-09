@@ -14,24 +14,29 @@
  *   limitations under the License.
  */
 
-package com.venomvendor.sms.deduplicate
+package com.venomvendor.sms.deduplicate.di
 
 import android.app.Application
-import com.venomvendor.sms.deduplicate.core.di.coreModule
-import com.venomvendor.sms.deduplicate.di.appModule
-import org.koin.android.ext.koin.androidContext
-import org.koin.android.ext.koin.androidLogger
-import org.koin.core.context.startKoin
+import android.net.Uri
+import com.venomvendor.sms.deduplicate.core.di.MessagingType
+import com.venomvendor.sms.deduplicate.core.factory.DeletionManager
+import com.venomvendor.sms.deduplicate.manager.DeletionHandler
+import org.koin.dsl.module
 
-class DeduplicateApplication : Application() {
-    override fun onCreate() {
-        super.onCreate()
+/**
+ * DI module for core
+ */
+val appModule = module {
 
-        // Start Koin
-        startKoin {
-            androidLogger()
-            androidContext(applicationContext)
-            modules(coreModule, appModule)
-        }
+    factory {
+        get<Application>().contentResolver
+    }
+
+    /**
+     * For SMS Deletion
+     */
+    factory<DeletionManager> { (wrapper: MessagingType) ->
+        /* Uri should start with `content://` */
+        DeletionHandler(Uri.parse("content://${wrapper.uri}"))
     }
 }

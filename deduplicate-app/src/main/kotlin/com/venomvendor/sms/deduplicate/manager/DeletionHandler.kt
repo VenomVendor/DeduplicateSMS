@@ -14,24 +14,19 @@
  *   limitations under the License.
  */
 
-package com.venomvendor.sms.deduplicate
+package com.venomvendor.sms.deduplicate.manager
 
-import android.app.Application
-import com.venomvendor.sms.deduplicate.core.di.coreModule
-import com.venomvendor.sms.deduplicate.di.appModule
-import org.koin.android.ext.koin.androidContext
-import org.koin.android.ext.koin.androidLogger
-import org.koin.core.context.startKoin
+import android.content.ContentResolver
+import android.net.Uri
+import com.venomvendor.sms.deduplicate.core.factory.DeletionManager
+import com.venomvendor.sms.deduplicate.core.factory.WhereClause
+import org.koin.core.KoinComponent
+import org.koin.core.get
 
-class DeduplicateApplication : Application() {
-    override fun onCreate() {
-        super.onCreate()
+class DeletionHandler(private val uri: Uri) : DeletionManager, KoinComponent {
+    private val contentResolver = get<ContentResolver>()
 
-        // Start Koin
-        startKoin {
-            androidLogger()
-            androidContext(applicationContext)
-            modules(coreModule, appModule)
-        }
+    override fun delete(clause: WhereClause): Int {
+        return contentResolver.delete(uri, clause.query, null)
     }
 }
