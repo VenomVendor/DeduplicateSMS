@@ -1,9 +1,9 @@
 import Constants.DEBUG
-import Constants.FROYO
 import Constants.RELEASE
 
 plugins {
     id("com.android.library")
+    id("kotlin-android")
 }
 
 android {
@@ -11,6 +11,7 @@ android {
 
     defaultConfig {
         targetSdkVersion(Config.MAX_SDK_VERSION)
+        minSdkVersion(21)
         versionCode = 1
         versionName = "0.0.0"
     }
@@ -27,18 +28,18 @@ android {
         }
     }
 
-    flavorDimensions("buildType")
-    productFlavors {
-        create(FROYO) {
-            minSdkVersion(21)
-        }
-        //
-        // create(DONUT) {
-        //     minSdkVersion(4)
-        //     maxSdkVersion(7)
-        //     targetSdkVersion(7)
-        // }
-    }
+    // flavorDimensions("buildType")
+    // productFlavors {
+    //     create(FROYO) {
+    //         minSdkVersion(21)
+    //     }
+    //     //
+    //     // create(DONUT) {
+    //     //     minSdkVersion(4)
+    //     //     maxSdkVersion(7)
+    //     //     targetSdkVersion(7)
+    //     // }
+    // }
 
     buildTypes {
         getByName(RELEASE) {
@@ -64,26 +65,31 @@ android {
             isMinifyEnabled = false
             versionNameSuffix = Config.DEBUG_SUFFIX
         }
+    }
 
-        packagingOptions {
-            Config.EXCLUDE_PACKING.forEach(this::exclude)
-        }
+    packagingOptions {
+        Config.EXCLUDE_PACKING.forEach(this::exclude)
+    }
 
-        lintOptions {
-            isCheckReleaseBuilds = Config.CHECK_RELEASE_BUILDS
-            isAbortOnError = Config.ABORT_ON_ERROR
-            Config.DISABLE_LINTS.forEach(this::disable)
-        }
+    lintOptions {
+        isCheckReleaseBuilds = Config.CHECK_RELEASE_BUILDS
+        isAbortOnError = Config.ABORT_ON_ERROR
+        Config.DISABLE_LINTS.forEach(this::disable)
+    }
 
-        compileOptions {
-            sourceCompatibility = Config.JDK
-            targetCompatibility = Config.JDK
-        }
+    compileOptions {
+        sourceCompatibility = Config.JDK
+        targetCompatibility = Config.JDK
+    }
 
-        libraryVariants.all {
-            generateBuildConfigProvider?.configure {
-                enabled = false
-            }
+    kotlinOptions {
+        jvmTarget = Config.JDK.toString()
+        freeCompilerArgs = freeCompilerArgs + listOf("-Xinline-classes")
+    }
+
+    libraryVariants.all {
+        generateBuildConfigProvider?.configure {
+            enabled = false
         }
     }
 }
