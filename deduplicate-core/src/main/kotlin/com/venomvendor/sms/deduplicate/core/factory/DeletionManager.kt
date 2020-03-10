@@ -13,9 +13,6 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-
-@file:Suppress("EXPERIMENTAL_FEATURE_WARNING")
-
 package com.venomvendor.sms.deduplicate.core.factory
 
 /**
