@@ -18,8 +18,8 @@ import org.gradle.api.artifacts.dsl.RepositoryHandler
 
 object Versions {
     // Build
-    const val GRADLE_BUILD_TOOL = "4.0.0-alpha09"
-    const val KOTLIN = "1.3.61"
+    const val GRADLE_BUILD_TOOL = "4.1.0-alpha01"
+    const val KOTLIN = "1.3.70"
 
     // Semantic Version
     const val MAJOR = 3
@@ -28,6 +28,8 @@ object Versions {
 
     // Phone number parser
     const val PHONE_NUMBER_PARSER = "8.10.10"
+    const val COROUTINES = "1.3.4"
+    const val KOIN = "2.1.2"
     const val KT_LINT = "0.36.0"
     const val J_UNIT = "4.12"
 }
@@ -40,8 +42,12 @@ object Dependencies {
     }
 
     object App {
-        const val PHONE_NUMBER_PARSER =
-            "com.googlecode.libphonenumber:libphonenumber:${Versions.PHONE_NUMBER_PARSER}"
+        // @formatter:off
+        const val PHONE_NUMBER_PARSER = "com.googlecode.libphonenumber:libphonenumber:${Versions.PHONE_NUMBER_PARSER}"
+        const val COROUTINES = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.COROUTINES}"
+        // @formatter:on
+
+        const val KOIN = "org.koin:koin-android:${Versions.KOIN}"
     }
 
     object Build {

@@ -13,6 +13,9 @@ buildscript {
 
 allprojects {
     Dependencies.repoHandler(repositories)
+    buildscript {
+        Dependencies.repoHandler(repositories)
+    }
 }
 
 // Clean up

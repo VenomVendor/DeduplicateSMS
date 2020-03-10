@@ -1,12 +1,9 @@
 import Constants.DEBUG
-import Constants.DONUT
 import Constants.FROYO
 import Constants.RELEASE
 
 plugins {
     id("com.android.library")
-    kotlin("android")
-    kotlin("android.extensions")
 }
 
 android {
@@ -33,14 +30,14 @@ android {
     flavorDimensions("buildType")
     productFlavors {
         create(FROYO) {
-            minSdkVersion(8)
+            minSdkVersion(21)
         }
-
-        create(DONUT) {
-            minSdkVersion(4)
-            maxSdkVersion(7)
-            targetSdkVersion(7)
-        }
+        //
+        // create(DONUT) {
+        //     minSdkVersion(4)
+        //     maxSdkVersion(7)
+        //     targetSdkVersion(7)
+        // }
     }
 
     buildTypes {
@@ -91,10 +88,4 @@ android {
     }
 }
 
-dependencies {
-    kotlin(Constants.KOTLIN_JDK, version = Versions.KOTLIN)
-
-    testImplementation(Dependencies.Test.J_UNIT)
-}
-
-apply(from = rootProject.file("./gradle/formatter.gradle.kts"))
+apply(from = rootProject.file("./gradle/root.gradle.kts"))

@@ -14,15 +14,22 @@
  *   limitations under the License.
  */
 
-package com.venomvendor.sms.deduplicate.data
+@file:Suppress("EXPERIMENTAL_FEATURE_WARNING")
 
-import java.util.ArrayList
+package com.venomvendor.sms.deduplicate.core.factory
 
-class DuplicateList<T>(collection: Collection<T>) : ArrayList<T>(collection) {
+/**
+ * Responsible for deletion
+ */
+interface DeletionManager {
 
-    fun splice(fromIndex: Int, toIndex: Int): List<T> {
-        val splicedList: List<T> = DuplicateList(subList(fromIndex, toIndex))
-        removeRange(fromIndex, splicedList.size)
-        return splicedList
-    }
+    /**
+     * Deletes [clause] in given table
+     */
+    fun delete(clause: WhereClause): Int
 }
+
+/**
+ * Inline class for sql query
+ */
+inline class WhereClause(val query: String)
