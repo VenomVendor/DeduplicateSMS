@@ -83,11 +83,20 @@ internal class SplicerTest {
     }
 
     @Test
-    internal fun `splice should throw exception on negative`() {
+    internal fun `splice should throw exception on negative fromIndex`() {
         splicer = Splicer(listOf("1", "2", "3"))
 
         assertThrows<IndexOutOfBoundsException> {
             splicer.splice(-1, 0)
+        }
+    }
+
+    @Test
+    internal fun `splice should throw exception on toIndex lesser than fromIndex`() {
+        splicer = Splicer(listOf("1", "2", "3"))
+
+        assertThrows<IllegalArgumentException> {
+            splicer.splice(0, -1)
         }
     }
 
