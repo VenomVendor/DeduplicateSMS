@@ -1,6 +1,6 @@
 import java.io.ByteArrayOutputStream
 
-val isCi = System.getenv("CI")?.toBoolean() ?: false
+val isCi = System.getenv("GITHUB_ACTIONS")?.toBoolean() ?: false
 
 val ktlint: Configuration by configurations.creating
 
