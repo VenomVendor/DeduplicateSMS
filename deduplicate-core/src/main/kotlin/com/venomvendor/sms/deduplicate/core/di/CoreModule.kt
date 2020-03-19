@@ -16,7 +16,6 @@
 
 package com.venomvendor.sms.deduplicate.core.di
 
-import android.app.Application
 import com.venomvendor.sms.deduplicate.core.factory.Deleter
 import com.venomvendor.sms.deduplicate.core.internal.MmsDeleter
 import com.venomvendor.sms.deduplicate.core.internal.SmsDeleter
@@ -35,10 +34,6 @@ enum class MessagingType(val uri: String) {
  * DI module for core
  */
 val coreModule = module {
-
-    factory {
-        get<Application>().contentResolver
-    }
 
     /**
      * For SMS Deletion
