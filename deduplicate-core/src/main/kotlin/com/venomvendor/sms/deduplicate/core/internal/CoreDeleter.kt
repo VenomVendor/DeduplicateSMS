@@ -41,8 +41,9 @@ abstract class CoreDeleter : Deleter {
         if (splicerIds.isEmpty()) {
             return currentDeletedCount
         }
+
         // Get max count to be deleted
-        val toIndex = deleteBy.coerceAtMost(splicerIds.count())
+        val toIndex = 1.coerceAtLeast(deleteBy.coerceAtMost(splicerIds.count()))
 
         // Extract items to be deleted & removed them from the collection
         val tempIds = splicerIds.splice(0, toIndex).joinToString(",")
