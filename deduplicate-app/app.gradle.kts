@@ -4,14 +4,28 @@ import Constants.FROYO
 import Constants.RELEASE
 import com.android.build.gradle.internal.api.ApkVariantOutputImpl
 import org.jetbrains.kotlin.konan.file.File
+import org.jetbrains.kotlin.konan.properties.Properties
 import org.jetbrains.kotlin.konan.properties.loadProperties
+import org.jetbrains.kotlin.konan.properties.saveProperties
 
 plugins {
     id("com.android.application")
     id("kotlin-android")
 }
 
-val credProps = File("${rootProject.rootDir}/${Config.CREDENTIALS}").loadProperties()
+val credProps = File("${rootProject.rootDir}/${Config.CREDENTIALS}").let {
+    return@let if (it.exists) {
+        it.loadProperties()
+    } else {
+        val props = Properties().apply {
+            setProperty(Config.KEY_ALIAS, Config.KEY_ALIAS)
+            setProperty(Config.KEY_PASSWORD, Config.KEY_PASSWORD)
+            setProperty(Config.KEYSTORE_PASSWORD, Config.KEYSTORE_PASSWORD)
+        }
+        it.saveProperties(props)
+        props
+    }
+}
 
 android {
     compileSdkVersion(Config.MAX_SDK_VERSION)
