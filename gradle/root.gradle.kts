@@ -35,6 +35,7 @@ dependencies {
     testImplementation(Dependencies.Test.J_UNIT)
     testImplementation(Dependencies.Test.KOIN)
     testImplementation(Dependencies.Test.MOCKK)
+    testImplementation(Dependencies.Test.COROUTINES)
 }
 
 tasks.withType<KotlinCompile> {

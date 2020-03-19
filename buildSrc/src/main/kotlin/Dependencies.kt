@@ -62,5 +62,6 @@ object Dependencies {
         const val J_UNIT = "org.junit.jupiter:junit-jupiter:${Versions.J_UNIT}"
         const val KOIN = "org.koin:koin-test:${Versions.KOIN}"
         const val MOCKK = "io.mockk:mockk:${Versions.MOCKK}"
+        const val COROUTINES = "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.COROUTINES}"
     }
 }

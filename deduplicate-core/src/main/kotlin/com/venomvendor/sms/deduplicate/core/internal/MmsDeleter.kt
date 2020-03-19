@@ -18,8 +18,11 @@ package com.venomvendor.sms.deduplicate.core.internal
 
 import com.venomvendor.sms.deduplicate.core.di.MessagingType
 import com.venomvendor.sms.deduplicate.core.factory.Deleter
+import com.venomvendor.sms.deduplicate.core.ktx.DefaultDispatcherProvider
+import com.venomvendor.sms.deduplicate.core.ktx.DispatcherProvider
 
-class MmsDeleter : Deleter {
+class MmsDeleter(private val dispatcher: DispatcherProvider = DefaultDispatcherProvider()) :
+    Deleter {
     override val primaryKey: String
         get() = TODO("Not yet implemented")
     override val messagingType: MessagingType

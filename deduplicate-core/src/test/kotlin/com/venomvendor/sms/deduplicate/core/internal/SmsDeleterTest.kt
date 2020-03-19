@@ -25,7 +25,8 @@ import com.venomvendor.sms.deduplicate.core.util.Constants
 import io.mockk.Called
 import io.mockk.every
 import io.mockk.verify
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -33,7 +34,9 @@ import org.koin.core.qualifier.named
 import org.koin.test.get
 import kotlin.math.ceil
 
+@ExperimentalCoroutinesApi
 internal class SmsDeleterTest : BaseTest() {
+
     private lateinit var deleter: Deleter
 
     @BeforeEach
@@ -43,18 +46,15 @@ internal class SmsDeleterTest : BaseTest() {
     }
 
     @Test
-    internal fun `messaging type must be SMS type`() {
+    internal fun `messaging type must be SMS type`() =
         assertEquals(MessagingType.SMS, deleter.messagingType)
-    }
 
     @Test
-    internal fun `primary key should be _id`() {
-        assertEquals(Constants._ID, deleter.primaryKey)
-    }
+    internal fun `primary key should be _id`() = assertEquals(Constants._ID, deleter.primaryKey)
 
     @Test
     internal fun `empty list should delete zero and invoke none`() {
-        runBlocking {
+        testDispatcher.runBlockingTest {
             val deletionManager = get<DeletionManager>()
             val deleted = deleter.delete(emptyList(), 10)
             assertEquals(0, deleted)
@@ -65,7 +65,7 @@ internal class SmsDeleterTest : BaseTest() {
 
     @Test
     internal fun `list with N items should delete exactly N items`() {
-        runBlocking {
+        testDispatcher.runBlockingTest {
             val total = 101
             val split = 10
             val deletionManager = get<DeletionManager>()
@@ -81,7 +81,6 @@ internal class SmsDeleterTest : BaseTest() {
             val timesCalled = ceil(total.toDouble() / split).toInt()
 
             assertEquals(total, deleted)
-            // assertEquals(timesCalled * split, deleted)
 
             verify(exactly = timesCalled) {
                 deletionManager.delete(WhereClause(any()))
