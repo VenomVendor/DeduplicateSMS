@@ -18,7 +18,7 @@ import org.gradle.api.artifacts.dsl.RepositoryHandler
 
 object Versions {
     // Build
-    const val GRADLE_BUILD_TOOL = "4.1.0-alpha02"
+    const val GRADLE_BUILD_TOOL = "4.1.0-alpha03"
     const val KOTLIN = "1.3.70"
 
     // Semantic Version
@@ -33,6 +33,7 @@ object Versions {
     const val ANNOTATION = "1.1.0"
     const val KT_LINT = "0.36.0"
     const val J_UNIT = "5.6.0"
+    const val MOCKK = "1.9"
 }
 
 object Dependencies {
@@ -59,5 +60,7 @@ object Dependencies {
 
     object Test {
         const val J_UNIT = "org.junit.jupiter:junit-jupiter:${Versions.J_UNIT}"
+        const val KOIN = "org.koin:koin-test:${Versions.KOIN}"
+        const val MOCKK = "io.mockk:mockk:${Versions.MOCKK}"
     }
 }
