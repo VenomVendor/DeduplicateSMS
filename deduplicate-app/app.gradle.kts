@@ -8,6 +8,7 @@ import org.jetbrains.kotlin.konan.properties.loadProperties
 
 plugins {
     id("com.android.application")
+    id("kotlin-android")
 }
 
 val credProps = File("${rootProject.rootDir}/${Config.CREDENTIALS}").loadProperties()
@@ -18,6 +19,7 @@ android {
     defaultConfig {
         applicationId = Config.APP_ID
         targetSdkVersion(Config.MAX_SDK_VERSION)
+        minSdkVersion(21)
         versionCode = 1
         versionName = "0.0.0"
     }
@@ -34,18 +36,18 @@ android {
         }
     }
 
-    flavorDimensions("buildType")
-    productFlavors {
-        create(FROYO) {
-            minSdkVersion(21)
-        }
-        //
-        // create(DONUT) {
-        //     minSdkVersion(4)
-        //     maxSdkVersion(7)
-        //     targetSdkVersion(7)
-        // }
-    }
+    // flavorDimensions("buildType")
+    // productFlavors {
+    //     create(FROYO) {
+    //         minSdkVersion(21)
+    //     }
+    //     //
+    //     // create(DONUT) {
+    //     //     minSdkVersion(4)
+    //     //     maxSdkVersion(7)
+    //     //     targetSdkVersion(7)
+    //     // }
+    // }
 
     signingConfigs {
         register(RELEASE) {
@@ -90,31 +92,36 @@ android {
             isMinifyEnabled = false
             versionNameSuffix = Config.DEBUG_SUFFIX
         }
+    }
 
-        packagingOptions {
-            Config.EXCLUDE_PACKING.forEach(this::exclude)
-        }
+    packagingOptions {
+        Config.EXCLUDE_PACKING.forEach(this::exclude)
+    }
 
-        lintOptions {
-            isCheckReleaseBuilds = Config.CHECK_RELEASE_BUILDS
-            isAbortOnError = Config.ABORT_ON_ERROR
-            Config.DISABLE_LINTS.forEach(this::disable)
-        }
+    lintOptions {
+        isCheckReleaseBuilds = Config.CHECK_RELEASE_BUILDS
+        isAbortOnError = Config.ABORT_ON_ERROR
+        Config.DISABLE_LINTS.forEach(this::disable)
+    }
 
-        compileOptions {
-            sourceCompatibility = Config.JDK
-            targetCompatibility = Config.JDK
-        }
+    compileOptions {
+        sourceCompatibility = Config.JDK
+        targetCompatibility = Config.JDK
+    }
 
-        applicationVariants.all {
-            if (buildType.getName() == RELEASE) {
-                productFlavors.forEach { flavor ->
-                    val name = flavor.getName()
-                    outputs.forEach { output ->
-                        (output as ApkVariantOutputImpl).versionNameOverride = VERSION_NAME
-                        output.versionCodeOverride =
-                            if (name == FROYO) Config.FROYO else Config.DONUT
-                    }
+    kotlinOptions {
+        jvmTarget = Config.JDK.toString()
+        freeCompilerArgs = freeCompilerArgs + listOf("-Xinline-classes")
+    }
+
+    applicationVariants.all {
+        if (buildType.getName() == RELEASE) {
+            productFlavors.forEach { flavor ->
+                val name = flavor.getName()
+                outputs.forEach { output ->
+                    (output as ApkVariantOutputImpl).versionNameOverride = VERSION_NAME
+                    output.versionCodeOverride =
+                        if (name == FROYO) Config.FROYO else Config.DONUT
                 }
             }
         }

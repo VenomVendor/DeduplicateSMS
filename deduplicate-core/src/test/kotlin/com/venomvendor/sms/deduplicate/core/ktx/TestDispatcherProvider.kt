@@ -14,4 +14,23 @@
  *   limitations under the License.
  */
 
-package com.venomvendor.sms.deduplicate.core
+package com.venomvendor.sms.deduplicate.core.ktx
+
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestCoroutineDispatcher
+
+@ExperimentalCoroutinesApi
+class TestDispatcherProvider : DispatcherProvider {
+
+    // Get test dispatcher as default
+    private val testDispatcher = TestCoroutineDispatcher()
+
+    override fun default(): CoroutineDispatcher = testDispatcher
+
+    override fun io(): CoroutineDispatcher = default()
+
+    override fun main(): CoroutineDispatcher = default()
+
+    override fun unconfined(): CoroutineDispatcher = default()
+}

@@ -16,18 +16,20 @@
 
 package com.venomvendor.sms.deduplicate.core.util
 
+import androidx.annotation.CheckResult
 import java.util.ArrayList
 
 /**
  * Collection that can return spliced ArrayList
  */
-class Splicer<T>(collection: Collection<T>) : ArrayList<T>(collection) {
+class Splicer<T>(collection: Collection<T> = emptyList()) : ArrayList<T>(collection) {
 
     /**
      * Splice items from collection.
      * Sublist current collection from given [fromIndex] inclusive, to [toIndex] exclusive.
      * This also deletes the sublist items from current collection.
      */
+    @CheckResult
     fun splice(fromIndex: Int, toIndex: Int): List<T> {
         // Create a new copy
         val splicedList = Splicer(

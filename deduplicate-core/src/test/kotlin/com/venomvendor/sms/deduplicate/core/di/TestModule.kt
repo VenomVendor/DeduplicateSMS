@@ -17,35 +17,47 @@
 package com.venomvendor.sms.deduplicate.core.di
 
 import com.venomvendor.sms.deduplicate.core.factory.Deleter
+import com.venomvendor.sms.deduplicate.core.factory.DeletionManager
 import com.venomvendor.sms.deduplicate.core.internal.MmsDeleter
 import com.venomvendor.sms.deduplicate.core.internal.SmsDeleter
+import com.venomvendor.sms.deduplicate.core.ktx.DispatcherProvider
+import com.venomvendor.sms.deduplicate.core.ktx.TestDispatcherProvider
+import io.mockk.mockk
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 /**
- * Types of offline messages
- */
-enum class MessagingType(val uri: String) {
-    SMS("sms"),
-    MMS("mms")
-}
-
-/**
  * DI module for core
  */
-val coreModule = module {
+@ExperimentalCoroutinesApi
+val testModule = module {
+
+    /**
+     * Singleton test dispatcher
+     */
+    single<DispatcherProvider> {
+        TestDispatcherProvider()
+    }
 
     /**
      * For SMS Deletion
      */
-    factory<Deleter>(named(MessagingType.SMS)) {
-        SmsDeleter()
+    factory<Deleter>(named(MessagingType.SMS), override = true) {
+        SmsDeleter(get())
     }
 
     /**
      * For MMS Deletion
      */
-    factory<Deleter>(named(MessagingType.MMS)) {
-        MmsDeleter()
+    factory<Deleter>(named(MessagingType.MMS), override = true) {
+        MmsDeleter(get())
+    }
+
+    /**
+     * For SMS Deletion
+     */
+    single {
+        mockk<DeletionManager>()
     }
 }
