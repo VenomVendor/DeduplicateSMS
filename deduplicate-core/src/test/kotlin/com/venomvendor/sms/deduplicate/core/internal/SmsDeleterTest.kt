@@ -26,12 +26,15 @@ import io.mockk.Called
 import io.mockk.every
 import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.koin.core.qualifier.named
 import org.koin.test.get
+import kotlin.coroutines.ContinuationInterceptor
 import kotlin.math.ceil
 
 @ExperimentalCoroutinesApi
@@ -60,6 +63,29 @@ internal class SmsDeleterTest : BaseTest() {
             assertEquals(0, deleted)
 
             verify { deletionManager wasNot Called }
+        }
+    }
+
+    @Test
+    internal fun `coroutine must be in test dispatcher`() {
+        val deleter = SmsDeleter(get()) as Deleter
+
+        testDispatcher.runBlockingTest {
+            val deletionManager = get<DeletionManager>()
+            every { deletionManager.delete(WhereClause(any())) } returns 10
+            every {
+                deletionManager.delete(WhereClause(any()))
+            } answers {
+                // Assert if execution is in right scope
+                assertTrue(
+                    coroutineContext[ContinuationInterceptor].toString()
+                        .startsWith(TestCoroutineDispatcher::class.simpleName!!)
+                )
+
+                args.first().toString().split(",").count()
+            }
+
+            deleter.delete((1..100).toList().map { it.toString() }, 10)
         }
     }
 
