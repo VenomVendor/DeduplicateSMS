@@ -54,3 +54,4 @@ tasks.withType<Test> {
 }
 
 apply(from = rootProject.file("./gradle/formatter.gradle.kts"))
+apply(from = rootProject.file("./gradle/jacoco.gradle.kts"))

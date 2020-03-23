@@ -1,0 +1,49 @@
+name: Quality Check
+on:
+  pull_request:
+    branches-ignore:
+      - 'master'
+  push:
+    branches:
+      - 'develop'
+      - 'release/*'
+      - 'hotfix/*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Use JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+
+      - name: Check Formatting
+        run: ./gradlew clean ktlint --full-stacktrace
+
+      - name: jUnit Tests
+        run: ./gradlew jacocoReport -x ktLint --full-stacktrace
+
+      - name: Upload report to Codecov
+        shell: bash
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        run: |
+          echo "::debug Uploading report to codecov"
+          bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN
+          echo "::debug Completed uploading of reports"
+
+      - name: Upload report to Codacy
+        shell: bash
+        env:
+          CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
+        run: |
+          echo "::debug Uploading report for core module"
+          bash <(curl -Ls https://coverage.codacy.com/get.sh) report -l Kotlin --prefix deduplicate-core/src/main/kotlin -r deduplicate-core/build/reports/jacoco/report.xml --partial
+          echo "::debug Uploading report for app module"
+          bash <(curl -Ls https://coverage.codacy.com/get.sh) report -l Kotlin --prefix deduplicate-app/src/main/kotlin -r deduplicate-app/build/reports/jacoco/report.xml --partial
+          echo "::debug Finalising reports"
+          bash <(curl -Ls https://coverage.codacy.com/get.sh) final
+          echo "::debug Completed uploading of reports"
