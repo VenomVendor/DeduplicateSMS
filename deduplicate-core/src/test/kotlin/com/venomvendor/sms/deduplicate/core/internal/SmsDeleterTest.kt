@@ -20,7 +20,6 @@ import com.venomvendor.sms.deduplicate.core.BaseTest
 import com.venomvendor.sms.deduplicate.core.di.MessagingType
 import com.venomvendor.sms.deduplicate.core.factory.Deleter
 import com.venomvendor.sms.deduplicate.core.factory.DeletionManager
-import com.venomvendor.sms.deduplicate.core.factory.WhereClause
 import com.venomvendor.sms.deduplicate.core.util.Constants
 import io.mockk.Called
 import io.mockk.every
@@ -72,9 +71,9 @@ internal class SmsDeleterTest : BaseTest() {
 
         testDispatcher.runBlockingTest {
             val deletionManager = get<DeletionManager>()
-            every { deletionManager.delete(WhereClause(any())) } returns 10
+            every { deletionManager.delete(any()) } returns 10
             every {
-                deletionManager.delete(WhereClause(any()))
+                deletionManager.delete(any())
             } answers {
                 // Assert if execution is in right scope
                 assertTrue(
@@ -96,9 +95,9 @@ internal class SmsDeleterTest : BaseTest() {
             val split = 10
             val deletionManager = get<DeletionManager>()
 
-            every { deletionManager.delete(WhereClause(any())) } returns split
+            every { deletionManager.delete(any()) } returns split
             every {
-                deletionManager.delete(WhereClause(any()))
+                deletionManager.delete(any())
             } answers {
                 args.first().toString().split(",").count()
             }
@@ -109,7 +108,7 @@ internal class SmsDeleterTest : BaseTest() {
             assertEquals(total, deleted)
 
             verify(exactly = timesCalled) {
-                deletionManager.delete(WhereClause(any()))
+                deletionManager.delete(any())
             }
         }
     }

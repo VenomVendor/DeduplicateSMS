@@ -19,14 +19,13 @@ package com.venomvendor.sms.deduplicate.manager
 import android.content.ContentResolver
 import android.net.Uri
 import com.venomvendor.sms.deduplicate.core.factory.DeletionManager
-import com.venomvendor.sms.deduplicate.core.factory.WhereClause
 import org.koin.core.KoinComponent
 import org.koin.core.get
 
 class DeletionHandler(private val uri: Uri) : DeletionManager, KoinComponent {
     private val contentResolver = get<ContentResolver>()
 
-    override fun delete(clause: WhereClause): Int {
-        return contentResolver.delete(uri, clause.query, null)
+    override fun delete(query: String): Int {
+        return contentResolver.delete(uri, query, null)
     }
 }

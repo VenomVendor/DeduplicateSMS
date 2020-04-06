@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         targetSdkVersion(Config.MAX_SDK_VERSION)
-        minSdkVersion(21)
+        minSdkVersion(Config.MIN_SDK_VERSION)
         versionCode = 1
         versionName = "0.0.0"
     }
@@ -27,19 +27,6 @@ android {
             resources.srcDirs("src/test/resources")
         }
     }
-
-    // flavorDimensions("buildType")
-    // productFlavors {
-    //     create(FROYO) {
-    //         minSdkVersion(21)
-    //     }
-    //     //
-    //     // create(DONUT) {
-    //     //     minSdkVersion(4)
-    //     //     maxSdkVersion(7)
-    //     //     targetSdkVersion(7)
-    //     // }
-    // }
 
     buildTypes {
         getByName(RELEASE) {

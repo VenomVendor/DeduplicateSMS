@@ -18,7 +18,6 @@ package com.venomvendor.sms.deduplicate.core.internal
 
 import com.venomvendor.sms.deduplicate.core.factory.Deleter
 import com.venomvendor.sms.deduplicate.core.factory.DeletionManager
-import com.venomvendor.sms.deduplicate.core.factory.WhereClause
 import com.venomvendor.sms.deduplicate.core.util.Splicer
 
 /**
@@ -49,11 +48,11 @@ abstract class CoreDeleter : Deleter {
         val tempIds = splicerIds.splice(0, toIndex).joinToString(",")
 
         // Create query
-        val whereClause = WhereClause("$primaryKey in ($tempIds)")
+        val query = "$primaryKey in ($tempIds)"
 
         // Updated deleted count
         val deletedMessages = currentDeletedCount.plus(
-            deletionManager.delete(whereClause)
+            deletionManager.delete(query)
         )
 
         // Loop it.

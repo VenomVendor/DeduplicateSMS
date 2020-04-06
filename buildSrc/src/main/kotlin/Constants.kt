@@ -15,8 +15,6 @@
  */
 
 object Constants {
-    const val FROYO = "froyo"
-    const val DONUT = "donut"
     const val RELEASE = "release"
     const val DEBUG = "debug"
 

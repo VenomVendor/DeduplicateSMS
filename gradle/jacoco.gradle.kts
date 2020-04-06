@@ -41,6 +41,8 @@ fun ignoreClassList(): List<String> {
         "**/BuildConfig.*",
         "**/model/**/*.*",
         "**/PlaceHolder.*",
-        "**/Dummy.*"
+        "**/Dummy.*",
+        "**/ignore/**/*.*",
+        "**/activity/**/*.*"
     )
 }

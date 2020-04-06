@@ -58,14 +58,14 @@ class DeleteSMSAsync(
             stringBuilder.append(duplicateId).append(", ")
         }
         stringBuilder.append("-1")
-        val whereClause = String.format(
+        val query = String.format(
             "%s in (%s)",
             Constants._ID,
             stringBuilder.toString()
         )
         deletedMessages += contentResolver.delete(
             Constants.CONTENT_URI,
-            whereClause,
+            query,
             null
         )
         return deletedMessages

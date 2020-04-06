@@ -22,12 +22,7 @@ package com.venomvendor.sms.deduplicate.core.factory
 interface DeletionManager {
 
     /**
-     * Deletes [clause] in given table
+     * Deletes [query] in given table
      */
-    fun delete(clause: WhereClause): Int
+    fun delete(query: String): Int
 }
-
-/**
- * Inline class for sql query
- */
-inline class WhereClause(val query: String)
