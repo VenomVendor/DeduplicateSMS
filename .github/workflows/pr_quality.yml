@@ -32,7 +32,7 @@ jobs:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         run: |
           echo "::debug Uploading report to codecov"
-          bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN
+          bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN -F unittest
           echo "::debug Completed uploading of reports"
 
       - name: Upload report to Codacy
