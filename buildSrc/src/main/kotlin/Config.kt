@@ -23,6 +23,7 @@ object Config {
     val JDK: JavaVersion = JavaVersion.VERSION_1_8
 
     const val APP_ID = "com.venomvendor.sms.deduplicate"
+    const val MIN_SDK_VERSION = 21
     const val MAX_SDK_VERSION = 29
 
     const val KEY_FILE = "key.keystore"

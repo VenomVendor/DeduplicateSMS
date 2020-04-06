@@ -33,7 +33,7 @@ android {
     defaultConfig {
         applicationId = Config.APP_ID
         targetSdkVersion(Config.MAX_SDK_VERSION)
-        minSdkVersion(21)
+        minSdkVersion(Config.MIN_SDK_VERSION)
         versionCode = 1
         versionName = "0.0.0"
     }
@@ -140,12 +140,49 @@ android {
             }
         }
     }
+
+    buildFeatures {
+        compose = true
+    }
+
+    composeOptions {
+        // kotlinCompilerVersion = "1.3.61-dev-withExperimentalGoogleExtensions-20200129"
+        kotlinCompilerExtensionVersion = Versions.COMPOSE
+    }
 }
 
+// Default
 dependencies {
     implementation(project(":core"))
-
     implementation(Dependencies.App.PHONE_NUMBER_PARSER)
+    implementation(Dependencies.App.APPCOMPAT)
+    implementation(Dependencies.App.KTX_ACTIVITY)
+    implementation(Dependencies.App.KTX_CORE)
+}
+
+// Compose
+dependencies {
+    implementation(Dependencies.App.Compose.COMPILER)
+    implementation(Dependencies.App.Compose.RUNTIME)
+    implementation(Dependencies.App.Compose.CORE)
+    implementation(Dependencies.App.Compose.ANDROID_TEXT)
+    implementation(Dependencies.App.Compose.ANIMATION_CORE)
+    implementation(Dependencies.App.Compose.ANIMATION)
+    implementation(Dependencies.App.Compose.FOUNDATION)
+    implementation(Dependencies.App.Compose.FRAMEWORK)
+    implementation(Dependencies.App.Compose.GEOMETRY)
+    implementation(Dependencies.App.Compose.GRAPHICS)
+    implementation(Dependencies.App.Compose.LAYOUT)
+    implementation(Dependencies.App.Compose.PLATFORM)
+    implementation(Dependencies.App.Compose.TEXT)
+    implementation(Dependencies.App.Compose.TOOLING)
+    implementation(Dependencies.App.Compose.UTIL)
+    implementation(Dependencies.App.Compose.VECTOR)
+    implementation(Dependencies.App.Compose.MATERIAL)
+    implementation(Dependencies.App.Compose.ICONS_CORE)
+    implementation(Dependencies.App.Compose.EXTENDED)
+
+    implementation(Dependencies.Test.COMPOSE_UI)
 }
 
 apply(from = rootProject.file("./gradle/root.gradle.kts"))

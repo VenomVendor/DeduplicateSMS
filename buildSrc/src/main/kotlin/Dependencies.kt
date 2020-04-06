@@ -18,8 +18,8 @@ import org.gradle.api.artifacts.dsl.RepositoryHandler
 
 object Versions {
     // Build
-    const val GRADLE_BUILD_TOOL = "4.1.0-alpha03"
-    const val KOTLIN = "1.3.70"
+    const val GRADLE_BUILD_TOOL = "4.1.0-alpha04"
+    const val KOTLIN = "1.3.71"
 
     // Semantic Version
     const val MAJOR = 3
@@ -30,7 +30,14 @@ object Versions {
     const val PHONE_NUMBER_PARSER = "8.10.10"
     const val COROUTINES = "1.3.4"
     const val KOIN = "2.1.2"
+
     const val ANNOTATION = "1.1.0"
+    const val APPCOMPAT = "1.1.0"
+    const val KTX_ACTIVITY = "1.1.0"
+    const val KTX_CORE = "1.2.0"
+
+    const val COMPOSE = "0.1.0-dev08"
+
     const val KT_LINT = "0.36.0"
     const val J_UNIT = "5.6.0"
     const val MOCKK = "1.9"
@@ -49,8 +56,34 @@ object Dependencies {
         const val COROUTINES = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.COROUTINES}"
         // @formatter:on
 
+        const val APPCOMPAT = "androidx.appcompat:appcompat:${Versions.APPCOMPAT}"
+        const val KTX_ACTIVITY = "androidx.activity:activity-ktx:${Versions.KTX_ACTIVITY}"
+        const val KTX_CORE = "androidx.core:core-ktx:${Versions.KTX_CORE}"
+
         const val KOIN = "org.koin:koin-android:${Versions.KOIN}"
         const val ANNOTATION = "androidx.annotation:annotation:${Versions.ANNOTATION}"
+
+        object Compose {
+            const val COMPILER = "androidx.compose:compose-compiler:${Versions.COMPOSE}"
+            const val RUNTIME = "androidx.compose:compose-runtime:${Versions.COMPOSE}"
+            const val CORE = "androidx.ui:ui-core:${Versions.COMPOSE}"
+            const val ANDROID_TEXT = "androidx.ui:ui-android-text:${Versions.COMPOSE}"
+            const val ANIMATION_CORE = "androidx.ui:ui-animation-core:${Versions.COMPOSE}"
+            const val ANIMATION = "androidx.ui:ui-animation:${Versions.COMPOSE}"
+            const val FOUNDATION = "androidx.ui:ui-foundation:${Versions.COMPOSE}"
+            const val FRAMEWORK = "androidx.ui:ui-framework:${Versions.COMPOSE}"
+            const val GEOMETRY = "androidx.ui:ui-geometry:${Versions.COMPOSE}"
+            const val GRAPHICS = "androidx.ui:ui-graphics:${Versions.COMPOSE}"
+            const val LAYOUT = "androidx.ui:ui-layout:${Versions.COMPOSE}"
+            const val PLATFORM = "androidx.ui:ui-platform:${Versions.COMPOSE}"
+            const val TEXT = "androidx.ui:ui-text:${Versions.COMPOSE}"
+            const val TOOLING = "androidx.ui:ui-tooling:${Versions.COMPOSE}"
+            const val UTIL = "androidx.ui:ui-util:${Versions.COMPOSE}"
+            const val VECTOR = "androidx.ui:ui-vector:${Versions.COMPOSE}"
+            const val MATERIAL = "androidx.ui:ui-material:${Versions.COMPOSE}"
+            const val ICONS_CORE = "androidx.ui:ui-material-icons-core:${Versions.COMPOSE}"
+            const val EXTENDED = "androidx.ui:ui-material-icons-extended:${Versions.COMPOSE}"
+        }
     }
 
     object Build {
@@ -62,6 +95,10 @@ object Dependencies {
         const val J_UNIT = "org.junit.jupiter:junit-jupiter:${Versions.J_UNIT}"
         const val KOIN = "org.koin:koin-test:${Versions.KOIN}"
         const val MOCKK = "io.mockk:mockk:${Versions.MOCKK}"
+        const val COMPOSE_UI = "androidx.ui:ui-test:${Versions.COMPOSE}"
+
+        // @formatter:off
         const val COROUTINES = "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.COROUTINES}"
+        // @formatter:on
     }
 }
