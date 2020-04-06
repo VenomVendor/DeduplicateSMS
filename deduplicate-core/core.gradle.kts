@@ -28,19 +28,6 @@ android {
         }
     }
 
-    // flavorDimensions("buildType")
-    // productFlavors {
-    //     create(FROYO) {
-    //         minSdkVersion(21)
-    //     }
-    //     //
-    //     // create(DONUT) {
-    //     //     minSdkVersion(4)
-    //     //     maxSdkVersion(7)
-    //     //     targetSdkVersion(7)
-    //     // }
-    // }
-
     buildTypes {
         getByName(RELEASE) {
             isDebuggable = false

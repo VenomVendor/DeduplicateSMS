@@ -1,8 +1,5 @@
-import Config.VERSION_NAME
 import Constants.DEBUG
-import Constants.FROYO
 import Constants.RELEASE
-import com.android.build.gradle.internal.api.ApkVariantOutputImpl
 import org.jetbrains.kotlin.konan.file.File
 import org.jetbrains.kotlin.konan.properties.Properties
 import org.jetbrains.kotlin.konan.properties.loadProperties
@@ -49,19 +46,6 @@ android {
             resources.srcDirs("src/test/resources")
         }
     }
-
-    // flavorDimensions("buildType")
-    // productFlavors {
-    //     create(FROYO) {
-    //         minSdkVersion(21)
-    //     }
-    //     //
-    //     // create(DONUT) {
-    //     //     minSdkVersion(4)
-    //     //     maxSdkVersion(7)
-    //     //     targetSdkVersion(7)
-    //     // }
-    // }
 
     signingConfigs {
         register(RELEASE) {
@@ -128,19 +112,6 @@ android {
         freeCompilerArgs = freeCompilerArgs + listOf("-Xinline-classes")
     }
 
-    applicationVariants.all {
-        if (buildType.name == RELEASE) {
-            productFlavors.forEach { flavor ->
-                val name = flavor.name
-                outputs.forEach { output ->
-                    (output as ApkVariantOutputImpl).versionNameOverride = VERSION_NAME
-                    output.versionCodeOverride =
-                        if (name == FROYO) Config.FROYO else Config.DONUT
-                }
-            }
-        }
-    }
-
     buildFeatures {
         compose = true
     }
@@ -182,7 +153,7 @@ dependencies {
     implementation(Dependencies.App.Compose.ICONS_CORE)
     implementation(Dependencies.App.Compose.EXTENDED)
 
-    implementation(Dependencies.Test.COMPOSE_UI)
+    testImplementation(Dependencies.Test.COMPOSE_UI)
 }
 
 apply(from = rootProject.file("./gradle/root.gradle.kts"))
