@@ -16,11 +16,11 @@
 
 package com.venomvendor.sms.deduplicate.core.internal
 
-import com.venomvendor.sms.deduplicate.core.di.MessagingType
+import android.net.Uri
+import android.provider.Telephony
 import com.venomvendor.sms.deduplicate.core.factory.DeletionManager
 import com.venomvendor.sms.deduplicate.core.ktx.DefaultDispatcherProvider
 import com.venomvendor.sms.deduplicate.core.ktx.DispatcherProvider
-import com.venomvendor.sms.deduplicate.core.util.Constants
 import com.venomvendor.sms.deduplicate.core.util.Splicer
 import kotlinx.coroutines.withContext
 import org.koin.core.KoinComponent
@@ -30,12 +30,12 @@ import org.koin.core.parameter.parametersOf
 /**
  * Deletes SMS from INBOX
  */
-class SmsDeleter(private val dispatcher: DispatcherProvider = DefaultDispatcherProvider()) :
+open class SmsDeleter(private val dispatcher: DispatcherProvider = DefaultDispatcherProvider()) :
     CoreDeleter(), KoinComponent {
 
-    override val primaryKey = Constants._ID
+    override val primaryKey = Telephony.Sms._ID
 
-    override val messagingType = MessagingType.SMS
+    override val messagingType: Uri = Telephony.Sms.CONTENT_URI
 
     override suspend fun delete(duplicateIds: Collection<String>, deleteBy: Int): Int {
         if (duplicateIds.isEmpty()) {
@@ -50,7 +50,7 @@ class SmsDeleter(private val dispatcher: DispatcherProvider = DefaultDispatcherP
                 parametersOf(messagingType)
             }
 
-            // delete messages
+            // Delete messages
             return@withContext deleteMessages(deletionManager, duplicateIdx, deleteBy = deleteBy)
         }
     }

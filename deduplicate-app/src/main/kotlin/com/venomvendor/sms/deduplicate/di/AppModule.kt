@@ -18,7 +18,6 @@ package com.venomvendor.sms.deduplicate.di
 
 import android.app.Application
 import android.net.Uri
-import com.venomvendor.sms.deduplicate.core.di.MessagingType
 import com.venomvendor.sms.deduplicate.core.factory.DeletionManager
 import com.venomvendor.sms.deduplicate.manager.DeletionHandler
 import org.koin.dsl.module
@@ -33,10 +32,9 @@ val appModule = module {
     }
 
     /**
-     * For SMS Deletion
+     * For SMS/MMS Deletion
      */
-    factory<DeletionManager> { (wrapper: MessagingType) ->
-        /* Uri should start with `content://` */
-        DeletionHandler(Uri.parse("content://${wrapper.uri}"))
+    factory<DeletionManager> { (uri: Uri) ->
+        DeletionHandler(uri)
     }
 }
