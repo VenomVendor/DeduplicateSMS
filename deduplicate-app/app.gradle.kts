@@ -109,7 +109,8 @@ android {
 
     kotlinOptions {
         jvmTarget = Config.JDK.toString()
-        freeCompilerArgs = freeCompilerArgs + listOf("-Xinline-classes")
+        freeCompilerArgs =
+            freeCompilerArgs + listOf("-Xinline-classes", "-Xskip-metadata-version-check")
     }
 
     buildFeatures {
@@ -124,7 +125,9 @@ android {
 
 // Default
 dependencies {
-    implementation(project(":core"))
+    implementation(project(":search"))
+
+    // TODO: Delete below dependencies
     implementation(Dependencies.App.PHONE_NUMBER_PARSER)
     implementation(Dependencies.App.APPCOMPAT)
     implementation(Dependencies.App.KTX_ACTIVITY)
@@ -136,7 +139,9 @@ dependencies {
     implementation(Dependencies.App.Compose.COMPILER)
     implementation(Dependencies.App.Compose.RUNTIME)
     implementation(Dependencies.App.Compose.CORE)
-    implementation(Dependencies.App.Compose.ANDROID_TEXT)
+    implementation(Dependencies.App.Compose.TEXT_ANDROID)
+    implementation(Dependencies.App.Compose.TEXT_CORE)
+    implementation(Dependencies.App.Compose.TEXT)
     implementation(Dependencies.App.Compose.ANIMATION_CORE)
     implementation(Dependencies.App.Compose.ANIMATION)
     implementation(Dependencies.App.Compose.FOUNDATION)
@@ -145,7 +150,6 @@ dependencies {
     implementation(Dependencies.App.Compose.GRAPHICS)
     implementation(Dependencies.App.Compose.LAYOUT)
     implementation(Dependencies.App.Compose.PLATFORM)
-    implementation(Dependencies.App.Compose.TEXT)
     implementation(Dependencies.App.Compose.TOOLING)
     implementation(Dependencies.App.Compose.UTIL)
     implementation(Dependencies.App.Compose.VECTOR)

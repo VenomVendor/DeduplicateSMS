@@ -16,19 +16,16 @@
 
 package com.venomvendor.sms.deduplicate.core.internal
 
-import com.venomvendor.sms.deduplicate.core.di.MessagingType
-import com.venomvendor.sms.deduplicate.core.factory.Deleter
+import android.net.Uri
+import android.provider.Telephony
 import com.venomvendor.sms.deduplicate.core.ktx.DefaultDispatcherProvider
 import com.venomvendor.sms.deduplicate.core.ktx.DispatcherProvider
+import org.koin.core.KoinComponent
 
-class MmsDeleter(private val dispatcher: DispatcherProvider = DefaultDispatcherProvider()) :
-    Deleter {
-    override val primaryKey: String
-        get() = TODO("Not yet implemented")
-    override val messagingType: MessagingType
-        get() = TODO("Not yet implemented")
+class MmsDeleter(dispatcher: DispatcherProvider = DefaultDispatcherProvider()) :
+    SmsDeleter(dispatcher), KoinComponent {
 
-    override suspend fun delete(duplicateIds: Collection<String>, deleteBy: Int): Int {
-        TODO("Not yet implemented")
-    }
+    override val primaryKey = Telephony.Mms._ID
+
+    override val messagingType: Uri = Telephony.Mms.CONTENT_URI
 }

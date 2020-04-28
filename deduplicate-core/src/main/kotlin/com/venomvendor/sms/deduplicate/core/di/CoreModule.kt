@@ -25,9 +25,9 @@ import org.koin.dsl.module
 /**
  * Types of offline messages
  */
-enum class MessagingType(val uri: String) {
-    SMS("sms"),
-    MMS("mms")
+enum class MessagingType {
+    SMS,
+    MMS
 }
 
 /**

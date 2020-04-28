@@ -17,6 +17,7 @@
 package com.venomvendor.sms.deduplicate.data
 
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertSame
@@ -32,7 +33,7 @@ internal class CountryTest {
     }
 
     @Test
-    internal fun `when ID is same, Country should be equal`() {
+    internal fun `when id is same, Country should be equal`() {
         val country1 = Country("IN", "SATURN")
         val country2 = Country("IN", "VENUS")
 
@@ -40,7 +41,7 @@ internal class CountryTest {
     }
 
     @Test
-    internal fun `when ID is same, Country should be equal in equality`() {
+    internal fun `when id is same, Country should be equal in equality`() {
         val country1 = Country("IN", "SATURN")
         val country2 = Country("IN", "VENUS")
 
@@ -73,6 +74,13 @@ internal class CountryTest {
         val country = Country("IN", "SATURN")
 
         assertNotEquals(country, null)
+    }
+
+    @Test
+    internal fun `when comparison is null, items are different`() {
+        val country = Country("IN", "SATURN")
+
+        assertFalse(country == null)
     }
 
     @Test

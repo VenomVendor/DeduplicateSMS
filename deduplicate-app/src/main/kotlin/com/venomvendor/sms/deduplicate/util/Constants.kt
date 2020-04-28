@@ -23,6 +23,7 @@ import android.net.Uri
 object Constants {
     const val CURRENT_SMS_APP = "currentSmsApp"
     const val SHOW_EULA = "eula"
+
     @JvmField
     val CONTENT_URI: Uri = Uri.parse("content://sms")
     const val _ID = "_id"

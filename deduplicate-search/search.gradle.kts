@@ -26,6 +26,12 @@ android {
 
             resources.srcDirs("src/test/resources")
         }
+
+        getByName("androidTest") {
+            java.srcDir("src/androidTest/kotlin")
+
+            resources.srcDirs("src/androidTest/resources")
+        }
     }
 
     buildTypes {
@@ -80,6 +86,15 @@ android {
             enabled = false
         }
     }
+}
+
+// Default
+dependencies {
+    api(project(":core"))
+
+    implementation(Dependencies.App.PHONE_NUMBER_PARSER)
+
+    implementation(Dependencies.App.KTX_CORE)
 }
 
 apply(from = rootProject.file("./gradle/root.gradle.kts"))

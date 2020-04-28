@@ -15,7 +15,10 @@
  */
 package com.venomvendor.sms.deduplicate.data
 
-class Country(val countryCode: String, private val displayName: String) : Comparable<Country> {
+data class Country(
+    val countryCode: String,
+    private val displayName: String
+) : Comparable<Country> {
 
     override fun compareTo(other: Country): Int {
         return displayName.compareTo(other.displayName)

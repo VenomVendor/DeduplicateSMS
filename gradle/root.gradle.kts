@@ -40,7 +40,8 @@ dependencies {
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {
-        freeCompilerArgs = freeCompilerArgs + listOf("-Xinline-classes")
+        freeCompilerArgs =
+            freeCompilerArgs + listOf("-Xinline-classes", "-Xskip-metadata-version-check")
         jvmTarget = Config.JDK.toString()
     }
 }

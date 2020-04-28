@@ -22,7 +22,7 @@ task("ktLint", JavaExec::class) {
     )
 }
 
-tasks.named("preBuild") {
+tasks.named("check") {
     dependsOn("ktLint")
 }
 

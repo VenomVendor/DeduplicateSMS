@@ -14,30 +14,18 @@
  *   limitations under the License.
  */
 
-package com.venomvendor.sms.deduplicate.core.factory
+package com.venomvendor.sms.deduplicate.search.manager
 
-import android.net.Uri
+import com.venomvendor.sms.deduplicate.core.factory.Logger
 
-/**
- * Deletes messages from the table
- */
-interface Deleter {
+class SearchLogger : Logger {
 
-    /**
-     * Unique key in the table
-     */
-    val primaryKey: String
+    override fun log(message: String) {
+        println("SearchLogger $message")
+    }
 
-    /**
-     * Content [Uri] of the table
-     * Uri should start with `content://`
-     */
-    val messagingType: Uri
-
-    /**
-     * Deleted given items in batch
-     * @param duplicateIds items to be deleted
-     * @param deleteBy number of items to be deleted at once
-     */
-    suspend fun delete(duplicateIds: Collection<String>, deleteBy: Int): Int
+    override fun log(ex: Exception) {
+        println("SearchLogger ${ex.localizedMessage}")
+        ex.printStackTrace()
+    }
 }

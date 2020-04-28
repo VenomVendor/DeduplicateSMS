@@ -14,30 +14,12 @@
  *   limitations under the License.
  */
 
-package com.venomvendor.sms.deduplicate.core.factory
+package com.venomvendor.sms.deduplicate.search.factory
 
 import android.net.Uri
+import com.venomvendor.sms.deduplicate.search.data.Message
 
-/**
- * Deletes messages from the table
- */
-interface Deleter {
+interface MessageManager {
 
-    /**
-     * Unique key in the table
-     */
-    val primaryKey: String
-
-    /**
-     * Content [Uri] of the table
-     * Uri should start with `content://`
-     */
-    val messagingType: Uri
-
-    /**
-     * Deleted given items in batch
-     * @param duplicateIds items to be deleted
-     * @param deleteBy number of items to be deleted at once
-     */
-    suspend fun delete(duplicateIds: Collection<String>, deleteBy: Int): Int
+    suspend fun getMessages(uri: Uri, projection: Array<String>, sortOrder: String): List<Message>
 }

@@ -23,9 +23,8 @@ import org.koin.core.KoinComponent
 import org.koin.core.get
 
 class DeletionHandler(private val uri: Uri) : DeletionManager, KoinComponent {
+
     private val contentResolver = get<ContentResolver>()
 
-    override fun delete(query: String): Int {
-        return contentResolver.delete(uri, query, null)
-    }
+    override fun delete(query: String) = contentResolver.delete(uri, query, null)
 }
