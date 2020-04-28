@@ -125,7 +125,9 @@ android {
 
 // Default
 dependencies {
-    implementation(project(":core"))
+    implementation(project(":search"))
+
+    // TODO: Delete below dependencies
     implementation(Dependencies.App.PHONE_NUMBER_PARSER)
     implementation(Dependencies.App.APPCOMPAT)
     implementation(Dependencies.App.KTX_ACTIVITY)

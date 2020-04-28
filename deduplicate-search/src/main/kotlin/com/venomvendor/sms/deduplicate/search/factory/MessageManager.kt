@@ -14,29 +14,12 @@
  *   limitations under the License.
  */
 
-package com.venomvendor.sms.deduplicate.di
+package com.venomvendor.sms.deduplicate.search.factory
 
-import android.app.Application
 import android.net.Uri
-import com.venomvendor.sms.deduplicate.core.factory.DeletionManager
-import com.venomvendor.sms.deduplicate.core.factory.Logger
-import com.venomvendor.sms.deduplicate.manager.AppLogger
-import com.venomvendor.sms.deduplicate.manager.DeletionHandler
-import org.koin.dsl.module
+import com.venomvendor.sms.deduplicate.search.data.Message
 
-/**
- * DI module for app
- */
-val appModule = module {
+interface MessageManager {
 
-    factory(override = true) {
-        get<Application>().contentResolver
-    }
-
-    /**
-     * For SMS/MMS Deletion
-     */
-    factory<DeletionManager> { (uri: Uri) ->
-        DeletionHandler(uri)
-    }
+    suspend fun getMessages(uri: Uri, projection: Array<String>, sortOrder: String): List<Message>
 }

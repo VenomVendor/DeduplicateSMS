@@ -19,6 +19,7 @@ package com.venomvendor.sms.deduplicate
 import android.app.Application
 import com.venomvendor.sms.deduplicate.core.di.coreModule
 import com.venomvendor.sms.deduplicate.di.appModule
+import com.venomvendor.sms.deduplicate.search.di.searchModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -31,7 +32,7 @@ class DeduplicateApplication : Application() {
         startKoin {
             androidLogger()
             androidContext(applicationContext)
-            modules(coreModule, appModule)
+            modules(coreModule, searchModule, appModule)
         }
     }
 }

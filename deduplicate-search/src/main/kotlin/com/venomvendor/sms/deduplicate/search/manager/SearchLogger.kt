@@ -14,38 +14,18 @@
  *   limitations under the License.
  */
 
-package com.venomvendor.sms.deduplicate.core.di
+package com.venomvendor.sms.deduplicate.search.manager
 
-import com.venomvendor.sms.deduplicate.core.factory.Deleter
-import com.venomvendor.sms.deduplicate.core.internal.MmsDeleter
-import com.venomvendor.sms.deduplicate.core.internal.SmsDeleter
-import org.koin.core.qualifier.named
-import org.koin.dsl.module
+import com.venomvendor.sms.deduplicate.core.factory.Logger
 
-/**
- * Types of offline messages
- */
-enum class MessagingType {
-    SMS,
-    MMS
-}
+class SearchLogger : Logger {
 
-/**
- * DI module for core
- */
-val coreModule = module {
-
-    /**
-     * For SMS Deletion
-     */
-    factory<Deleter>(named(MessagingType.SMS)) {
-        SmsDeleter()
+    override fun log(message: String) {
+        println("SearchLogger $message")
     }
 
-    /**
-     * For MMS Deletion
-     */
-    factory<Deleter>(named(MessagingType.MMS)) {
-        MmsDeleter()
+    override fun log(ex: Exception) {
+        println("SearchLogger ${ex.localizedMessage}")
+        ex.printStackTrace()
     }
 }
