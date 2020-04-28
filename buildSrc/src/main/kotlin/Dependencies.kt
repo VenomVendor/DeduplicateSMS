@@ -15,11 +15,12 @@
  */
 
 import org.gradle.api.artifacts.dsl.RepositoryHandler
+import org.gradle.kotlin.dsl.maven
 
 object Versions {
     // Build
-    const val GRADLE_BUILD_TOOL = "4.1.0-alpha04"
-    const val KOTLIN = "1.3.71"
+    const val GRADLE_BUILD_TOOL = "4.1.0-alpha07"
+    const val KOTLIN = "1.3.72"
 
     // Semantic Version
     const val MAJOR = 3
@@ -36,7 +37,7 @@ object Versions {
     const val KTX_ACTIVITY = "1.1.0"
     const val KTX_CORE = "1.2.0"
 
-    const val COMPOSE = "0.1.0-dev08"
+    const val COMPOSE = "0.1.0-dev09"
 
     const val KT_LINT = "0.36.0"
     const val J_UNIT = "5.6.0"
@@ -48,6 +49,7 @@ object Dependencies {
     fun repoHandler(repositories: RepositoryHandler) {
         repositories.jcenter()
         repositories.google()
+        repositories.maven(url = "https://dl.bintray.com/kotlin/kotlin-eap")
     }
 
     object App {
@@ -67,7 +69,9 @@ object Dependencies {
             const val COMPILER = "androidx.compose:compose-compiler:${Versions.COMPOSE}"
             const val RUNTIME = "androidx.compose:compose-runtime:${Versions.COMPOSE}"
             const val CORE = "androidx.ui:ui-core:${Versions.COMPOSE}"
-            const val ANDROID_TEXT = "androidx.ui:ui-android-text:${Versions.COMPOSE}"
+            const val TEXT_ANDROID = "androidx.ui:ui-text-android:${Versions.COMPOSE}"
+            const val TEXT_CORE = "androidx.ui:ui-text-core:${Versions.COMPOSE}"
+            const val TEXT = "androidx.ui:ui-text:${Versions.COMPOSE}"
             const val ANIMATION_CORE = "androidx.ui:ui-animation-core:${Versions.COMPOSE}"
             const val ANIMATION = "androidx.ui:ui-animation:${Versions.COMPOSE}"
             const val FOUNDATION = "androidx.ui:ui-foundation:${Versions.COMPOSE}"
@@ -76,7 +80,6 @@ object Dependencies {
             const val GRAPHICS = "androidx.ui:ui-graphics:${Versions.COMPOSE}"
             const val LAYOUT = "androidx.ui:ui-layout:${Versions.COMPOSE}"
             const val PLATFORM = "androidx.ui:ui-platform:${Versions.COMPOSE}"
-            const val TEXT = "androidx.ui:ui-text:${Versions.COMPOSE}"
             const val TOOLING = "androidx.ui:ui-tooling:${Versions.COMPOSE}"
             const val UTIL = "androidx.ui:ui-util:${Versions.COMPOSE}"
             const val VECTOR = "androidx.ui:ui-vector:${Versions.COMPOSE}"

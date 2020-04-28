@@ -71,7 +71,8 @@ android {
 
     kotlinOptions {
         jvmTarget = Config.JDK.toString()
-        freeCompilerArgs = freeCompilerArgs + listOf("-Xinline-classes")
+        freeCompilerArgs =
+            freeCompilerArgs + listOf("-Xinline-classes", "-Xskip-metadata-version-check")
     }
 
     libraryVariants.all {
