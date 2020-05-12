@@ -14,47 +14,31 @@
  *   limitations under the License.
  */
 
-package com.venomvendor.sms.deduplicate.core
+package com.venomvendor.sms.deduplicate.search
 
 import androidx.annotation.CallSuper
-import com.venomvendor.sms.deduplicate.core.di.coreModule
-import com.venomvendor.sms.deduplicate.core.di.testModule
-import com.venomvendor.sms.deduplicate.core.ktx.DispatcherProvider
-import kotlinx.coroutines.Dispatchers
+import com.venomvendor.sms.deduplicate.search.di.searchModule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.test.KoinTest
-import org.koin.test.get
 
 @ExperimentalCoroutinesApi
 abstract class BaseTest : KoinTest {
-
-    val testDispatcher: TestCoroutineDispatcher by lazy {
-        get<DispatcherProvider>().default() as TestCoroutineDispatcher
-    }
 
     @BeforeEach
     @CallSuper
     open fun setUp() {
         startKoin {
-            modules(coreModule, testModule)
+            modules(searchModule)
         }
-
-        Dispatchers.setMain(testDispatcher)
     }
 
     @AfterEach
     @CallSuper
     open fun tearDown() {
-        Dispatchers.resetMain()
-        testDispatcher.cleanupTestCoroutines()
-
         stopKoin()
     }
 }
