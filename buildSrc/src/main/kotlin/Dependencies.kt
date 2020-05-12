@@ -19,7 +19,7 @@ import org.gradle.kotlin.dsl.maven
 
 object Versions {
     // Build
-    const val GRADLE_BUILD_TOOL = "4.1.0-alpha07"
+    const val GRADLE_BUILD_TOOL = "4.1.0-alpha09"
     const val KOTLIN = "1.3.72"
 
     // Semantic Version
@@ -37,7 +37,7 @@ object Versions {
     const val KTX_ACTIVITY = "1.1.0"
     const val KTX_CORE = "1.2.0"
 
-    const val COMPOSE = "0.1.0-dev09"
+    const val COMPOSE = "0.1.0-dev10"
 
     const val KT_LINT = "0.36.0"
     const val J_UNIT = "5.6.0"
@@ -104,4 +104,6 @@ object Dependencies {
         const val COROUTINES = "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.COROUTINES}"
         // @formatter:on
     }
+
+    val COMPOSE = App.Compose
 }

@@ -118,7 +118,7 @@ android {
     }
 
     composeOptions {
-        // kotlinCompilerVersion = "1.3.61-dev-withExperimentalGoogleExtensions-20200129"
+        kotlinCompilerVersion = "1.3.70-dev-withExperimentalGoogleExtensions-20200424"
         kotlinCompilerExtensionVersion = Versions.COMPOSE
     }
 }
@@ -136,26 +136,26 @@ dependencies {
 
 // Compose
 dependencies {
-    implementation(Dependencies.App.Compose.COMPILER)
-    implementation(Dependencies.App.Compose.RUNTIME)
-    implementation(Dependencies.App.Compose.CORE)
-    implementation(Dependencies.App.Compose.TEXT_ANDROID)
-    implementation(Dependencies.App.Compose.TEXT_CORE)
-    implementation(Dependencies.App.Compose.TEXT)
-    implementation(Dependencies.App.Compose.ANIMATION_CORE)
-    implementation(Dependencies.App.Compose.ANIMATION)
-    implementation(Dependencies.App.Compose.FOUNDATION)
-    implementation(Dependencies.App.Compose.FRAMEWORK)
-    implementation(Dependencies.App.Compose.GEOMETRY)
-    implementation(Dependencies.App.Compose.GRAPHICS)
-    implementation(Dependencies.App.Compose.LAYOUT)
-    implementation(Dependencies.App.Compose.PLATFORM)
-    implementation(Dependencies.App.Compose.TOOLING)
-    implementation(Dependencies.App.Compose.UTIL)
-    implementation(Dependencies.App.Compose.VECTOR)
-    implementation(Dependencies.App.Compose.MATERIAL)
-    implementation(Dependencies.App.Compose.ICONS_CORE)
-    implementation(Dependencies.App.Compose.EXTENDED)
+    implementation(Dependencies.COMPOSE.COMPILER)
+    implementation(Dependencies.COMPOSE.RUNTIME)
+    implementation(Dependencies.COMPOSE.CORE)
+    implementation(Dependencies.COMPOSE.TEXT_ANDROID)
+    implementation(Dependencies.COMPOSE.TEXT_CORE)
+    implementation(Dependencies.COMPOSE.TEXT)
+    implementation(Dependencies.COMPOSE.ANIMATION_CORE)
+    implementation(Dependencies.COMPOSE.ANIMATION)
+    implementation(Dependencies.COMPOSE.FOUNDATION)
+    implementation(Dependencies.COMPOSE.FRAMEWORK)
+    implementation(Dependencies.COMPOSE.GEOMETRY)
+    implementation(Dependencies.COMPOSE.GRAPHICS)
+    implementation(Dependencies.COMPOSE.LAYOUT)
+    implementation(Dependencies.COMPOSE.PLATFORM)
+    implementation(Dependencies.COMPOSE.TOOLING)
+    implementation(Dependencies.COMPOSE.UTIL)
+    implementation(Dependencies.COMPOSE.VECTOR)
+    implementation(Dependencies.COMPOSE.MATERIAL)
+    implementation(Dependencies.COMPOSE.ICONS_CORE)
+    implementation(Dependencies.COMPOSE.EXTENDED)
 
     testImplementation(Dependencies.Test.COMPOSE_UI)
 }
