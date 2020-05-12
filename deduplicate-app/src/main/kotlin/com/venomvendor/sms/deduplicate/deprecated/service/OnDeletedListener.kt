@@ -14,7 +14,7 @@
  *   limitations under the License.
  */
 
-package com.venomvendor.sms.deduplicate.service
+package com.venomvendor.sms.deduplicate.deprecated.service
 
 interface OnDeletedListener {
     fun onResponse(deletedMessages: Int, interrupted: Boolean)

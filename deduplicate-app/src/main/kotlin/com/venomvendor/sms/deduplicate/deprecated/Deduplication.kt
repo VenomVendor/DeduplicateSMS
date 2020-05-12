@@ -15,13 +15,12 @@
  */
 @file:Suppress("DEPRECATION")
 
-package com.venomvendor.sms.deduplicate.activity
+package com.venomvendor.sms.deduplicate.deprecated
 
 import android.Manifest.permission
 import android.annotation.TargetApi
 import android.app.Activity
 import android.app.AlertDialog
-import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
@@ -34,7 +33,6 @@ import android.os.Handler
 import android.preference.PreferenceManager
 import android.provider.Settings
 import android.provider.Telephony.Sms
-import android.telephony.TelephonyManager
 import android.text.Html
 import android.view.Gravity
 import android.view.View
@@ -49,17 +47,19 @@ import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import com.venomvendor.sms.deduplicate.BuildConfig
+import com.venomvendor.sms.deduplicate.DeduplicateViewModel
 import com.venomvendor.sms.deduplicate.R
 import com.venomvendor.sms.deduplicate.data.Country
-import com.venomvendor.sms.deduplicate.data.FindDuplicates
-import com.venomvendor.sms.deduplicate.data.FindDuplicates.OnDuplicatesFoundListener
-import com.venomvendor.sms.deduplicate.service.DeleteSMSAsync
-import com.venomvendor.sms.deduplicate.service.OnDeletedListener
+import com.venomvendor.sms.deduplicate.deprecated.FindDuplicates.OnDuplicatesFoundListener
+import com.venomvendor.sms.deduplicate.deprecated.service.DeleteSMSAsync
+import com.venomvendor.sms.deduplicate.deprecated.service.OnDeletedListener
 import com.venomvendor.sms.deduplicate.util.Constants
 import com.venomvendor.sms.deduplicate.util.Utils.isValidMessageApp
 import com.venomvendor.sms.deduplicate.util.Utils.revertOldApp
-import java.util.ArrayList
-import java.util.Locale
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlin.math.abs
 
 /*
@@ -135,36 +135,28 @@ class Deduplication : Activity(), View.OnClickListener {
         mKeepFirst = findViewById(R.id.keep_first)
         mDeleteBy = findViewById(R.id.per_iteration)
         mSpinner = findViewById(R.id.country_selector)
-        addData()
+
+        val uiScope = CoroutineScope(Dispatchers.Main)
+        uiScope.launch {
+            addData()
+        }
         initListeners()
     }
 
-    private fun addData() {
-        val countryCodes = Locale.getISOCountries()
-        val countries: MutableList<Country> =
-            ArrayList(countryCodes.size + 1)
-        for (countryCode in countryCodes) {
-            val locale = Locale("", countryCode)
-            val countryNameInEng = locale.getDisplayCountry(Locale.ENGLISH)
-            val country = Country(locale.country, countryNameInEng)
-            countries.add(country)
+    private suspend fun addData() {
+        lateinit var adapter: ArrayAdapter<Country>
+        withContext(Dispatchers.IO) {
+            val countries = DeduplicateViewModel().getCountries()
+            adapter = ArrayAdapter(
+                applicationContext,
+                android.R.layout.simple_spinner_item,
+                countries
+            )
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         }
-        countries.sort()
-        countries.add(0, Country(country, PRE_SELECT))
-        val adapter = ArrayAdapter(
-            this,
-            android.R.layout.simple_spinner_item, countries
-        )
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
         mSpinner.adapter = adapter
     }
-
-    private val country: String
-        get() {
-            val tm =
-                getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-            return tm.networkCountryIso.toUpperCase(Locale.ENGLISH)
-        }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
     private fun initListeners() {
@@ -251,7 +243,9 @@ class Deduplication : Activity(), View.OnClickListener {
                     Settings.ACTION_APPLICATION_DETAILS_SETTINGS
                 )
                 intent.data = Uri.parse("package:$packageName")
-                startActivityForResult(intent, UPDATE_PERMISSIONS)
+                startActivityForResult(intent,
+                    UPDATE_PERMISSIONS
+                )
             },
             null
         )
@@ -334,7 +328,9 @@ class Deduplication : Activity(), View.OnClickListener {
         if (!isValidMessageApp(this)) {
             val setApp = Intent(Sms.Intents.ACTION_CHANGE_DEFAULT)
             setApp.putExtra(Sms.Intents.EXTRA_PACKAGE_NAME, packageName)
-            startActivityForResult(setApp, APP_CHANGE_REQUEST)
+            startActivityForResult(setApp,
+                APP_CHANGE_REQUEST
+            )
         } else {
             showWarning()
         }
@@ -356,13 +352,14 @@ class Deduplication : Activity(), View.OnClickListener {
 
     private fun findDuplicates() {
         val selectedCountry = (mSpinner.selectedItem as Country).countryCode
-        val findDuplicates = FindDuplicates(
-            this,
-            mIgnoreTimestamp.isChecked,
-            mIgnoreSpace.isChecked,
-            mKeepFirst.isChecked,
-            selectedCountry
-        )
+        val findDuplicates =
+            FindDuplicates(
+                this,
+                mIgnoreTimestamp.isChecked,
+                mIgnoreSpace.isChecked,
+                mKeepFirst.isChecked,
+                selectedCountry
+            )
         findDuplicates.setOnDuplicatesFoundListener(object : OnDuplicatesFoundListener {
             override fun duplicatesFound(duplicateIds: List<String>) {
                 if (duplicateIds.isEmpty()) {
@@ -506,6 +503,5 @@ class Deduplication : Activity(), View.OnClickListener {
         private const val RUNTIME_PERMISSIONS_CODE = 255
         private val REQUIRED_PERMISSIONS = arrayOf(permission.READ_SMS)
         private val DEFAULT_DEL = if (BuildConfig.DEBUG) 2 else 50
-        private const val PRE_SELECT = "Select your country"
     }
 }

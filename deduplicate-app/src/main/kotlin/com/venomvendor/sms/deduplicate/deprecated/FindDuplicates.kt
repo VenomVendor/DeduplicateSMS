@@ -15,7 +15,7 @@
  */
 @file:Suppress("DEPRECATION")
 
-package com.venomvendor.sms.deduplicate.data
+package com.venomvendor.sms.deduplicate.deprecated
 
 import android.annotation.SuppressLint
 import android.app.Activity
