@@ -21,6 +21,7 @@ import com.venomvendor.sms.deduplicate.search.data.Message
 import com.venomvendor.sms.deduplicate.search.factory.DuplicateFinder
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.koin.core.KoinComponent
@@ -50,6 +51,111 @@ internal class DuplicateFinderImplTest : BaseTest(), KoinComponent {
                     ignoreSpace = false
                 ).isEmpty()
             )
+        }
+    }
+
+    @Test
+    internal fun `list with one item return empty set`() {
+        val duplicateFinder = get<DuplicateFinder>()
+
+        val messages = mutableListOf<Message>()
+
+        messages.add(
+            Message("1", "1", "1", "1")
+        )
+
+        runBlockingTest {
+            assertTrue(
+                duplicateFinder.getDuplicates(
+                    messages,
+                    "",
+                    ignoreTimestamp = false,
+                    ignoreSpace = false
+                ).isEmpty()
+            )
+        }
+    }
+
+    @Test
+    internal fun `list with same item return duplicate item`() {
+        val duplicateFinder = get<DuplicateFinder>()
+
+        val messages = mutableListOf<Message>()
+
+        messages.add(
+            Message("1", "1", "1", "1")
+        )
+
+        messages.add(
+            Message("2", "1", "1", "1")
+        )
+
+        runBlockingTest {
+            val result = duplicateFinder.getDuplicates(
+                messages,
+                "",
+                ignoreTimestamp = false,
+                ignoreSpace = false
+            )
+
+            assertEquals(1, result.count())
+
+            assertEquals(result.first().id, "2")
+        }
+    }
+
+    @Test
+    internal fun `list with same item with number return duplicate item`() {
+        val duplicateFinder = get<DuplicateFinder>()
+
+        val messages = mutableListOf<Message>()
+
+        messages.add(
+            Message("1", "1", "+919999999999", "1")
+        )
+
+        messages.add(
+            Message("2", "1", "+919999999999", "1")
+        )
+
+        runBlockingTest {
+            val result = duplicateFinder.getDuplicates(
+                messages,
+                "",
+                ignoreTimestamp = false,
+                ignoreSpace = false
+            )
+
+            assertEquals(1, result.count())
+
+            assertEquals(result.first().id, "2")
+        }
+    }
+
+    @Test
+    internal fun `list with same item with space return no duplicate`() {
+        val duplicateFinder = get<DuplicateFinder>()
+
+        val messages = mutableListOf<Message>()
+
+        messages.add(
+            Message("1", "1", "+919999999999", "1")
+        )
+
+        messages.add(
+            // Added space around body
+            Message("2", "1".padEnd(5).padStart(10), "+919999999999", "1")
+        )
+
+        runBlockingTest {
+            val result = duplicateFinder.getDuplicates(
+                messages,
+                "",
+                ignoreTimestamp = false,
+                ignoreSpace = false
+            )
+
+            assertTrue(result.isEmpty())
         }
     }
 }
