@@ -83,23 +83,25 @@ class MessageGenerator : MessageManager, KoinComponent {
 
             try {
                 val message = extractMessage(cursor)
-                messages.add(message)
+                if (message != null) {
+                    messages.add(message)
+                }
             } catch (ex: Exception) {
                 logger.log(ex)
             }
         }
     }
 
-    private fun extractMessage(cursor: Cursor): Message {
+    private fun extractMessage(cursor: Cursor): Message? {
         val columnIndexId = cursor.getColumnIndex(Constants._ID)
         val id = if (cursor.getType(columnIndexId) == Cursor.FIELD_TYPE_INTEGER) {
             cursor.getInt(columnIndexId).toString()
         } else {
-            cursor.getStringOrNull(columnIndexId) ?: ""
+            cursor.getStringOrNull(columnIndexId) ?: return null
         }
-        val message = cursor.getStringOrNull(cursor.getColumnIndex(Constants.BODY)) ?: ""
-        val phone = cursor.getStringOrNull(cursor.getColumnIndex(Constants.ADDRESS)) ?: ""
-        val date = cursor.getStringOrNull(cursor.getColumnIndex(Constants.DATE)) ?: ""
+        val message = cursor.getStringOrNull(cursor.getColumnIndex(Constants.BODY)) ?: return null
+        val phone = cursor.getStringOrNull(cursor.getColumnIndex(Constants.ADDRESS)) ?: return null
+        val date = cursor.getStringOrNull(cursor.getColumnIndex(Constants.DATE)) ?: return null
 
         return Message(id, message, phone, date)
     }
