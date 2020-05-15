@@ -16,11 +16,11 @@
 
 package com.venomvendor.sms.deduplicate.core.internal
 
-import android.net.Uri
-import android.provider.Telephony
+import com.venomvendor.sms.deduplicate.core.di.MessagingType
 import com.venomvendor.sms.deduplicate.core.factory.DeletionManager
 import com.venomvendor.sms.deduplicate.core.ktx.DefaultDispatcherProvider
 import com.venomvendor.sms.deduplicate.core.ktx.DispatcherProvider
+import com.venomvendor.sms.deduplicate.core.util.Constants
 import com.venomvendor.sms.deduplicate.core.util.Splicer
 import kotlinx.coroutines.withContext
 import org.koin.core.KoinComponent
@@ -33,9 +33,9 @@ import org.koin.core.parameter.parametersOf
 open class SmsDeleter(private val dispatcher: DispatcherProvider = DefaultDispatcherProvider()) :
     CoreDeleter(), KoinComponent {
 
-    override val primaryKey = Telephony.Sms._ID
+    override val primaryKey = Constants._ID
 
-    override val messagingType: Uri = Telephony.Sms.CONTENT_URI
+    override val messagingType = MessagingType.SMS
 
     override suspend fun delete(duplicateIds: Collection<String>, deleteBy: Int): Int {
         if (duplicateIds.isEmpty()) {

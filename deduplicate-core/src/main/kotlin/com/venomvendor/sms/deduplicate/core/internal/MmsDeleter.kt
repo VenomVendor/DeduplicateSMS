@@ -16,16 +16,16 @@
 
 package com.venomvendor.sms.deduplicate.core.internal
 
-import android.net.Uri
-import android.provider.Telephony
+import com.venomvendor.sms.deduplicate.core.di.MessagingType
 import com.venomvendor.sms.deduplicate.core.ktx.DefaultDispatcherProvider
 import com.venomvendor.sms.deduplicate.core.ktx.DispatcherProvider
+import com.venomvendor.sms.deduplicate.core.util.Constants
 import org.koin.core.KoinComponent
 
 class MmsDeleter(dispatcher: DispatcherProvider = DefaultDispatcherProvider()) :
     SmsDeleter(dispatcher), KoinComponent {
 
-    override val primaryKey = Telephony.Mms._ID
+    override val primaryKey = Constants._ID
 
-    override val messagingType: Uri = Telephony.Mms.CONTENT_URI
+    override val messagingType = MessagingType.MMS
 }
