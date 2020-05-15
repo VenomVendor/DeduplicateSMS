@@ -61,7 +61,7 @@ internal class DuplicateFinderImplTest : BaseTest(), KoinComponent {
         val messages = mutableListOf<Message>()
 
         messages.add(
-            Message("1", "1", "1", "1")
+            Message("1", "1", "+910000000000", "1")
         )
 
         runBlockingTest {
@@ -83,11 +83,11 @@ internal class DuplicateFinderImplTest : BaseTest(), KoinComponent {
         val messages = mutableListOf<Message>()
 
         messages.add(
-            Message("1", "1", "1", "1")
+            Message("1", "1", "+910000000000", "1")
         )
 
         messages.add(
-            Message("2", "1", "1", "1")
+            Message("2", "1", "+910000000000", "1")
         )
 
         runBlockingTest {
@@ -100,7 +100,7 @@ internal class DuplicateFinderImplTest : BaseTest(), KoinComponent {
 
             assertEquals(1, result.count())
 
-            assertEquals(result.first().id, "2")
+            assertEquals("2", result.first().id)
         }
     }
 
@@ -111,11 +111,11 @@ internal class DuplicateFinderImplTest : BaseTest(), KoinComponent {
         val messages = mutableListOf<Message>()
 
         messages.add(
-            Message("1", "1", "+919999999999", "1")
+            Message("1", "1", "+910000000000", "1")
         )
 
         messages.add(
-            Message("2", "1", "+919999999999", "1")
+            Message("2", "1", "+910000000000", "1")
         )
 
         runBlockingTest {
@@ -128,7 +128,7 @@ internal class DuplicateFinderImplTest : BaseTest(), KoinComponent {
 
             assertEquals(1, result.count())
 
-            assertEquals(result.first().id, "2")
+            assertEquals("2", result.first().id)
         }
     }
 
@@ -139,12 +139,12 @@ internal class DuplicateFinderImplTest : BaseTest(), KoinComponent {
         val messages = mutableListOf<Message>()
 
         messages.add(
-            Message("1", "1", "+919999999999", "1")
+            Message("1", "1", "+910000000000", "1")
         )
 
         messages.add(
             // Added space around body
-            Message("2", "1".padEnd(5).padStart(10), "+919999999999", "1")
+            Message("2", "1".padEnd(5).padStart(10), "+910000000000", "1")
         )
 
         runBlockingTest {
