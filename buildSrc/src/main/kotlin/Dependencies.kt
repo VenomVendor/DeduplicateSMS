@@ -37,7 +37,7 @@ object Versions {
     const val KTX_ACTIVITY = "1.1.0"
     const val KTX_CORE = "1.2.0"
 
-    const val COMPOSE = "0.1.0-dev10"
+    const val COMPOSE = "0.1.0-dev11"
 
     const val KT_LINT = "0.36.0"
     const val J_UNIT = "5.6.0"
@@ -75,11 +75,9 @@ object Dependencies {
             const val ANIMATION_CORE = "androidx.ui:ui-animation-core:${Versions.COMPOSE}"
             const val ANIMATION = "androidx.ui:ui-animation:${Versions.COMPOSE}"
             const val FOUNDATION = "androidx.ui:ui-foundation:${Versions.COMPOSE}"
-            const val FRAMEWORK = "androidx.ui:ui-framework:${Versions.COMPOSE}"
             const val GEOMETRY = "androidx.ui:ui-geometry:${Versions.COMPOSE}"
             const val GRAPHICS = "androidx.ui:ui-graphics:${Versions.COMPOSE}"
             const val LAYOUT = "androidx.ui:ui-layout:${Versions.COMPOSE}"
-            const val PLATFORM = "androidx.ui:ui-platform:${Versions.COMPOSE}"
             const val TOOLING = "androidx.ui:ui-tooling:${Versions.COMPOSE}"
             const val UTIL = "androidx.ui:ui-util:${Versions.COMPOSE}"
             const val VECTOR = "androidx.ui:ui-vector:${Versions.COMPOSE}"
