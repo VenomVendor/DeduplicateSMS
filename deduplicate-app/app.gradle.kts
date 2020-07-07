@@ -138,24 +138,29 @@ dependencies {
 dependencies {
     implementation(Dependencies.COMPOSE.COMPILER)
     implementation(Dependencies.COMPOSE.RUNTIME)
-    implementation(Dependencies.COMPOSE.CORE)
-    implementation(Dependencies.COMPOSE.TEXT_ANDROID)
-    implementation(Dependencies.COMPOSE.TEXT_CORE)
-    implementation(Dependencies.COMPOSE.TEXT)
-    implementation(Dependencies.COMPOSE.ANIMATION_CORE)
+
     implementation(Dependencies.COMPOSE.ANIMATION)
+    implementation(Dependencies.COMPOSE.ANIMATION_CORE)
+    implementation(Dependencies.COMPOSE.CORE)
     implementation(Dependencies.COMPOSE.FOUNDATION)
     implementation(Dependencies.COMPOSE.GEOMETRY)
     implementation(Dependencies.COMPOSE.GRAPHICS)
     implementation(Dependencies.COMPOSE.LAYOUT)
-    implementation(Dependencies.COMPOSE.TOOLING)
-    implementation(Dependencies.COMPOSE.UTIL)
-    implementation(Dependencies.COMPOSE.VECTOR)
     implementation(Dependencies.COMPOSE.MATERIAL)
-    implementation(Dependencies.COMPOSE.ICONS_CORE)
-    implementation(Dependencies.COMPOSE.EXTENDED)
+    implementation(Dependencies.COMPOSE.MATERIAL_ICONS)
+    implementation(Dependencies.COMPOSE.MATERIAL_ICONS_EXT)
+    implementation(Dependencies.COMPOSE.STATE_TRACKER)
+    implementation(Dependencies.COMPOSE.TEXT)
+    implementation(Dependencies.COMPOSE.TEXT_ANDROID)
+    implementation(Dependencies.COMPOSE.TEXT_CORE)
+    implementation(Dependencies.COMPOSE.TOOLING)
+    implementation(Dependencies.COMPOSE.UNIT)
+    implementation(Dependencies.COMPOSE.UTIL)
+}
 
-    testImplementation(Dependencies.Test.COMPOSE_UI)
+// Compose Test
+dependencies {
+    testImplementation(Dependencies.Test.UI_TEST)
 }
 
 apply(from = rootProject.file("./gradle/root.gradle.kts"))

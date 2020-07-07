@@ -19,7 +19,7 @@ import org.gradle.kotlin.dsl.maven
 
 object Versions {
     // Build
-    const val GRADLE_BUILD_TOOL = "4.1.0-alpha09"
+    const val GRADLE_BUILD_TOOL = "4.2.0-alpha03"
     const val KOTLIN = "1.3.72"
 
     // Semantic Version
@@ -37,7 +37,7 @@ object Versions {
     const val KTX_ACTIVITY = "1.1.0"
     const val KTX_CORE = "1.2.0"
 
-    const val COMPOSE = "0.1.0-dev11"
+    const val COMPOSE = "0.1.0-dev14"
 
     const val KT_LINT = "0.36.0"
     const val J_UNIT = "5.6.0"
@@ -68,22 +68,29 @@ object Dependencies {
         object Compose {
             const val COMPILER = "androidx.compose:compose-compiler:${Versions.COMPOSE}"
             const val RUNTIME = "androidx.compose:compose-runtime:${Versions.COMPOSE}"
-            const val CORE = "androidx.ui:ui-core:${Versions.COMPOSE}"
-            const val TEXT_ANDROID = "androidx.ui:ui-text-android:${Versions.COMPOSE}"
-            const val TEXT_CORE = "androidx.ui:ui-text-core:${Versions.COMPOSE}"
-            const val TEXT = "androidx.ui:ui-text:${Versions.COMPOSE}"
-            const val ANIMATION_CORE = "androidx.ui:ui-animation-core:${Versions.COMPOSE}"
             const val ANIMATION = "androidx.ui:ui-animation:${Versions.COMPOSE}"
+            const val ANIMATION_CORE = "androidx.ui:ui-animation-core:${Versions.COMPOSE}"
+            const val CORE = "androidx.ui:ui-core:${Versions.COMPOSE}"
             const val FOUNDATION = "androidx.ui:ui-foundation:${Versions.COMPOSE}"
             const val GEOMETRY = "androidx.ui:ui-geometry:${Versions.COMPOSE}"
             const val GRAPHICS = "androidx.ui:ui-graphics:${Versions.COMPOSE}"
             const val LAYOUT = "androidx.ui:ui-layout:${Versions.COMPOSE}"
-            const val TOOLING = "androidx.ui:ui-tooling:${Versions.COMPOSE}"
-            const val UTIL = "androidx.ui:ui-util:${Versions.COMPOSE}"
-            const val VECTOR = "androidx.ui:ui-vector:${Versions.COMPOSE}"
+            const val LIVEDATA = "androidx.ui:ui-livedata:${Versions.COMPOSE}"
             const val MATERIAL = "androidx.ui:ui-material:${Versions.COMPOSE}"
-            const val ICONS_CORE = "androidx.ui:ui-material-icons-core:${Versions.COMPOSE}"
-            const val EXTENDED = "androidx.ui:ui-material-icons-extended:${Versions.COMPOSE}"
+            const val MATERIAL_ICONS = "androidx.ui:ui-material-icons-core:${Versions.COMPOSE}"
+
+            // @formatter:off
+            const val MATERIAL_ICONS_EXT = "androidx.ui:ui-material-icons-extended:${Versions.COMPOSE}"
+            // @formatter:on
+
+            const val RXJAVA2 = "androidx.ui:ui-rxjava2:${Versions.COMPOSE}"
+            const val STATE_TRACKER = "androidx.ui:ui-saved-instance-state:${Versions.COMPOSE}"
+            const val TEXT = "androidx.ui:ui-text:${Versions.COMPOSE}"
+            const val TEXT_ANDROID = "androidx.ui:ui-text-android:${Versions.COMPOSE}"
+            const val TEXT_CORE = "androidx.ui:ui-text-core:${Versions.COMPOSE}"
+            const val TOOLING = "androidx.ui:ui-tooling:${Versions.COMPOSE}"
+            const val UNIT = "androidx.ui:ui-unit:${Versions.COMPOSE}"
+            const val UTIL = "androidx.ui:ui-util:${Versions.COMPOSE}"
         }
     }
 
@@ -96,7 +103,7 @@ object Dependencies {
         const val J_UNIT = "org.junit.jupiter:junit-jupiter:${Versions.J_UNIT}"
         const val KOIN = "org.koin:koin-test:${Versions.KOIN}"
         const val MOCKK = "io.mockk:mockk:${Versions.MOCKK}"
-        const val COMPOSE_UI = "androidx.ui:ui-test:${Versions.COMPOSE}"
+        const val UI_TEST = "androidx.ui:ui-test:${Versions.COMPOSE}"
 
         // @formatter:off
         const val COROUTINES = "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.COROUTINES}"
